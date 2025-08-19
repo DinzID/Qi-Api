@@ -89,7 +89,7 @@
     {
       "name": "Fake Free Fire",
       "desc": "Generate Free Fire lobby images",
-      "path": "/api/fakeff?nickname=",
+      "path": "/Maker/fakeff?nickname=",
       "status": "ready",
       "params": {
         "nickname": "Player nickname",
