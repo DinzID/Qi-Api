@@ -21,7 +21,7 @@ module.exports = function(app) {
     }
 
     // TikTok Downloader Endpoint
-    app.get('/Downloader/tiktok', async (req, res) => {
+    app.get('/downloader/tiktok', async (req, res) => {
         try {
             const { url } = req.query;
             
@@ -131,17 +131,17 @@ module.exports = function(app) {
     });
 
     // API Documentation Endpoint
-    app.get('/Downloader/tiktok/docs', (req, res) => {
+    app.get('/downloader/tiktok/docs', (req, res) => {
         res.json({
             name: "TikTok Downloader",
             desc: "Download TikTok videos without watermark",
-            path: "/api/tiktok?url=[TIKTOK_URL]",
+            path: "/downloader/tiktok?url=[TIKTOK_URL]",
             status: "ready",
             params: {
                 url: "TikTok video URL (required)"
             },
             example: {
-                request: "/api/tiktok?url=https://www.tiktok.com/@username/video/123456789",
+                request: "/downloader/tiktok?url=https://www.tiktok.com/@username/video/123456789",
                 response: {
                     status: true,
                     title: "Video title",
