@@ -90,9 +90,7 @@
       "name": "MLBB Tournaments",
       "desc": "Get latest Mobile Legends tournament information",
       "path": "/creator/tournaments/ml",
-      "status": "ready",
-      "params": {
-      }
+      "status": "ready"
         }
         ]
     },
