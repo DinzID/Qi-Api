@@ -2,7 +2,6 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 module.exports = function(app) {
-    // Endpoint untuk edit foto
     app.get('/ai/editfoto', async (req, res) => {
         try {
             const { url, prompt } = req.query;
