@@ -12,7 +12,7 @@ module.exports = function(app) {
                 return res.status(400).json({
                     status: false,
                     error: 'Parameter url dan prompt diperlukan',
-                    example: '/ai
+                    example: '/ai/editfoto?url=https://example.com/photo.jpg&prompt=make%20it%20sunset'
                 });
             }
 
