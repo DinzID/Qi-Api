@@ -52,7 +52,7 @@ module.exports = function(app) {
     }
 
     // Endpoint baru khusus untuk tournament
-    app.get('/tournaments/ml', async (req, res) => {
+    app.get('/creator/tournaments/ml', async (req, res) => {
         try {
             const tournaments = await infoTourney();
             res.status(200).json({
