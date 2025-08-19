@@ -86,6 +86,13 @@
     {
       "name": "Games",
       "items": [
+      {
+      "name": "MLBB Tournaments",
+      "desc": "Get latest Mobile Legends tournament information",
+      "path": "/tournaments/ml",
+      "status": "ready",
+      "params": {}
+       },
         {
           "name": "Tebak Bendera",
           "desc": "Guess the country flag (data from Gist)",
