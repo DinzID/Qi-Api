@@ -50,7 +50,7 @@
     {
       "name": "TikTok Downloader",
       "desc": "Download TikTok videos without watermark",
-      "path": "/api/tiktok?url=",
+      "path": "/Downloader/tiktok?url=",
       "status": "ready",
       "params": {
         "url": "TikTok video URL"
