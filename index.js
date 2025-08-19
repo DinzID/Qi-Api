@@ -6,11 +6,9 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const tiktokDLRouter = require('./src/api/Downloader/TiktokDL');
 app.enable("trust proxy");
 app.set("json spaces", 2);
 
-app.use('/api', tiktokDLRouter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
