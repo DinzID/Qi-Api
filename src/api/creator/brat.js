@@ -1,8 +1,7 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 module.exports = function(app) {
-    // Endpoint untuk brat message
+    // Endpoint untuk brat message (return image)
     app.get('/creator/brat', async (req, res) => {
         try {
             const { text } = req.query;
@@ -12,7 +11,7 @@ module.exports = function(app) {
                 return res.status(400).json({
                     status: false,
                     error: 'Parameter text diperlukan',
-                    example: '/creator/brat?text=hai+sayang+🐱🐹🐤'
+                    example: '/creator/brat?text=hai+sayang'
                 });
             }
 
@@ -20,55 +19,33 @@ module.exports = function(app) {
             const encodedText = encodeURIComponent(text);
             const apiUrl = `https://api-faa-skuarta.vercel.app/faa/brat?text=${encodedText}`;
 
-            // Request ke API external
+            // Request ke API external untuk mendapatkan image
             const response = await axios.get(apiUrl, {
+                responseType: 'arraybuffer', // Important untuk binary data
                 timeout: 15000,
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Accept': 'application/json'
+                    'Accept': 'image/*'
                 }
             });
 
-            // Parse response
-            const responseData = response.data;
-
-            // Jika response adalah JSON (berdasarkan contoh)
-            if (typeof responseData === 'object' && responseData !== null) {
-                res.status(200).json({
-                    status: true,
-                    result: responseData,
-                    api_source: 'api-faa-skuarta.vercel.app',
-                    timestamp: new Date().toISOString()
-                });
-            } 
-            // Jika response adalah HTML (kemungkinan scraped content)
-            else if (typeof responseData === 'string') {
-                const $ = cheerio.load(responseData);
-                
-                // Coba extract informasi dari HTML
-                const result = {
-                    text: text,
-                    processed_content: responseData.substring(0, 200) + '...' // Potongan konten
-                };
-
-                res.status(200).json({
-                    status: true,
-                    result: result,
-                    api_source: 'api-faa-skuarta.vercel.app',
-                    note: 'Response is HTML content',
-                    timestamp: new Date().toISOString()
-                });
-            } 
-            // Format tidak dikenali
-            else {
-                res.status(200).json({
-                    status: true,
-                    result: responseData,
-                    api_source: 'api-faa-skuarta.vercel.app',
-                    note: 'Unknown response format',
-                    timestamp: new Date().toISOString()
+            // Cek jika response adalah image
+            const contentType = response.headers['content-type'];
+            if (!contentType || !contentType.startsWith('image/')) {
+                return res.status(500).json({
+                    status: false,
+                    error: 'Response bukan gambar',
+                    details: 'API external mengembalikan tipe content yang tidak diharapkan'
                 });
             }
+
+            // Set header dan kirim image
+            res.set('Content-Type', contentType);
+            res.set('Content-Length', response.data.length);
+            res.set('X-API-Source', 'api-faa-skuarta.vercel.app');
+            res.set('X-Generated-At', new Date().toISOString());
+            
+            res.send(response.data);
 
         } catch (error) {
             console.error('Brat API Error:', error.message);
@@ -103,31 +80,36 @@ module.exports = function(app) {
         }
     });
 
-    // Endpoint untuk test brat API
-    app.get('/creator/brat/test', async (req, res) => {
+    // Endpoint untuk preview brat (return JSON dengan URL)
+    app.get('/creator/brat/preview', async (req, res) => {
         try {
-            const testText = 'hai sayang 🐱🐹🐤';
-            const encodedText = encodeURIComponent(testText);
-            const apiUrl = `https://api-faa-skuarta.vercel.app/faa/brat?text=${encodedText}`;
+            const { text } = req.query;
 
-            const response = await axios.get(apiUrl, {
-                timeout: 10000
-            });
+            if (!text) {
+                return res.status(400).json({
+                    status: false,
+                    error: 'Parameter text diperlukan',
+                    example: '/creator/brat/preview?text=hai+sayang'
+                });
+            }
+
+            const encodedText = encodeURIComponent(text);
+            const imageUrl = `https://api-faa-skuarta.vercel.app/faa/brat?text=${encodedText}`;
 
             res.status(200).json({
                 status: true,
-                test_text: testText,
-                response: response.data,
-                response_type: typeof response.data,
-                api_url: apiUrl,
-                timestamp: new Date().toISOString()
+                image_url: imageUrl,
+                direct_url: `/creator/brat?text=${encodedText}`,
+                text: text,
+                timestamp: new Date().toISOString(),
+                usage: 'Kunjungi URL image_url untuk mendapatkan gambar langsung'
             });
 
         } catch (error) {
             res.status(500).json({
                 status: false,
-                error: 'Test failed: ' + error.message,
-                timestamp: new Date().toISOString()
+                error: 'Internal server error',
+                details: error.message
             });
         }
     });
@@ -136,24 +118,32 @@ module.exports = function(app) {
     app.get('/creator/brat/info', (req, res) => {
         res.status(200).json({
             status: true,
-            service: 'Brat Message API',
+            service: 'Brat Message Image API',
             version: '1.0',
-            description: 'API untuk memproses pesan brat dengan emoji',
+            description: 'API untuk generate gambar brat message dengan emoji',
             endpoints: {
-                main: '/creator/brat?text=[your_message]',
-                test: '/creator/brat/test',
-                info: '/creator/brat/info'
+                image: '/creator/brat?text=[message]',
+                preview: '/creator/brat/preview?text=[message]',
+                info: '/creator/brat/info',
+                health: '/creator/brat/health'
             },
             parameters: {
-                text: 'String - Pesan yang akan diproses (required)'
+                text: 'String - Pesan yang akan digenerate menjadi gambar (required)'
             },
-            example: {
-                request: '/creator/brat?text=hai+sayang+🐱🐹🐤',
-                response: 'Lihat response dari api-faa-skuarta.vercel.app'
+            examples: {
+                direct_image: '/creator/brat?text=hai+sayang+🐱🐹🐤',
+                preview_info: '/creator/brat/preview?text=hello+world',
+                with_emoji: '/creator/brat?text=love+you+💖🐱🌸'
             },
             source_api: 'https://api-faa-skuarta.vercel.app/faa/brat',
+            features: [
+                'Direct image response',
+                'Support emoji dalam text',
+                'Auto URL encoding',
+                'Error handling'
+            ],
             limits: {
-                max_text_length: 1000,
+                max_text_length: 500,
                 timeout: 15000
             }
         });
@@ -162,14 +152,21 @@ module.exports = function(app) {
     // Endpoint untuk health check
     app.get('/creator/brat/health', async (req, res) => {
         try {
-            // Test connection to external API
+            // Test connection dengan request kecil
             const testUrl = 'https://api-faa-skuarta.vercel.app/faa/brat?text=test';
-            await axios.get(testUrl, { timeout: 10000 });
+            const response = await axios.get(testUrl, {
+                timeout: 10000,
+                validateStatus: () => true // Accept any status code
+            });
+
+            const isImage = response.headers['content-type']?.startsWith('image/');
 
             res.status(200).json({
                 status: true,
                 message: 'Brat API is healthy',
                 external_api: 'accessible',
+                response_type: response.headers['content-type'],
+                is_image: isImage,
                 timestamp: new Date().toISOString()
             });
 
@@ -183,4 +180,4 @@ module.exports = function(app) {
             });
         }
     });
-};
+}; 
