@@ -15,7 +15,7 @@ const backgroundList = [
 const FONT_URL = 'https://files.cloudkuimages.guru/fonts/vF3tpPDf.ttf';
 
 // API Endpoint
-router.get('/api/fakeff', async (req, res) => {
+router.get('/Maker/fakeff', async (req, res) => {
   try {
     const { nickname, background } = req.query;
 
