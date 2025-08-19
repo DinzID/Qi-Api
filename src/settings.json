@@ -1,5 +1,5 @@
 {
-  "name": "Falcon-Api UI",
+  "name": "DinzID-Api UI",
   "version": "v1.0.0",
   "description": "Simple and easy to use API.",
   "bannerImage": "/src/banner.jpg",
@@ -7,8 +7,8 @@
     "status": "Online!"
   },
   "apiSettings": {
-    "creator": "FlowFalcon", 
-    "apikey": ["falcon-api"]
+    "creator": "DinzID & Qia", 
+    "apikey": ["DinziD-api"]
   },
   "categories": [
     {
