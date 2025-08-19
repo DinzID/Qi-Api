@@ -1,7 +1,7 @@
 const express = require('express');
 const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const axios = require('axios');
-const router = express.Router();
+module.exports = function(app) {
 
 // Background image list
 const backgroundList = [
@@ -90,5 +90,3 @@ router.get('/Maker/fakeff/docs', (req, res) => {
     }))
   });
 });
-
-module.exports = router;
