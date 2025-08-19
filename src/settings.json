@@ -15,6 +15,17 @@
       "name": "AI (Artificial Intelligence)",
       "items": [
         {
+      "name": "AI Photo Editor",
+      "desc": "Edit photos with AI based on text prompts",
+      "path": "/aicreator/editfoto?url=&prompt=",
+      "status": "ready",
+      "params": {
+        "url": "Image URL to edit (required)",
+        "prompt": "AI editing instructions (required)"
+      },
+      "response_type": "image"
+    },
+        {
           "name": "LuminAI",
           "desc": "Talk with luminai",
           "path": "/ai/luminai?text=",
