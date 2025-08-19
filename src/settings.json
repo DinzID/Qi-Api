@@ -102,9 +102,7 @@
       "path": "/creator/fakeff/backgrounds",
       "status": "ready",
       "params": {}
-    }
-  ]
-        },
+      },
         {
       "name": "MLBB Tournaments",
       "desc": "Get latest Mobile Legends tournament information",
