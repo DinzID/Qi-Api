@@ -45,12 +45,13 @@
       ]
     },
     {
+{
   "name": "Downloaders",
   "items": [
     {
       "name": "TikTok Downloader",
       "desc": "Download TikTok videos without watermark",
-      "path": "/downloader/tiktok?url=",
+      "path": "/api/tiktok?url=",
       "status": "ready",
       "params": {
         "url": "TikTok video URL"
