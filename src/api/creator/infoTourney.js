@@ -3,7 +3,6 @@ const cheerio = require('cheerio');
 const moment = require('moment-timezone');
 
 module.exports = function(app) {
-    // Fungsi scrape info tourney (tambahan baru)
     async function infoTourney() {
         try {
             const url = 'https://infotourney.com/tournament/mobile-legends';
@@ -51,7 +50,6 @@ module.exports = function(app) {
         }
     }
 
-    // Endpoint baru khusus untuk tournament
     app.get('/creator/tournaments/ml', async (req, res) => {
         try {
             const tournaments = await infoTourney();
