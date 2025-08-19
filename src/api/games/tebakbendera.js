@@ -2,13 +2,12 @@ const axios = require('axios');
 const express = require('express');
 
 module.exports = function(app) {
-    // URL Gist yang Anda berikan
     const FLAG_DATA_URL = "https://gist.githubusercontent.com/DinzID/a9cc8367fab1f4c9dd0ab0c405fb6b81/raw/4e04f3fd57be8a8fb905a243e23edf3c525236dd/tebakbendera.json";
     
-    // Cache data bendera
     let flagData = [];
-    
-    // Fungsi untuk memuat data dari Gist
+    const gameSessions = {};
+    const debugMode = true; // Set to false in production
+
     async function loadFlagData() {
         try {
             const response = await axios.get(FLAG_DATA_URL);
@@ -16,20 +15,15 @@ module.exports = function(app) {
             console.log('Data bendera berhasil dimuat dari Gist');
         } catch (error) {
             console.error('Gagal memuat data bendera:', error.message);
-            throw error; // Tidak ada fallback, langsung throw error
+            throw error;
         }
     }
-    
-    // Inisialisasi: Muat data saat API start
+
     loadFlagData();
-    
-    // Session storage
-    const gameSessions = {};
-    
-    // Endpoint: Mulai permainan baru
+
     app.get('/games/tebakbendera/start', async (req, res) => {
         try {
-            if (flagData.length === 0) await loadFlagData(); // Pastikan data sudah terload
+            if (flagData.length === 0) await loadFlagData();
             
             const options = [...flagData]
                 .sort(() => Math.random() - 0.5)
@@ -44,12 +38,22 @@ module.exports = function(app) {
                 attempts: 0
             };
             
-            res.json({
+            const response = {
                 status: true,
                 sessionId,
                 flagImage: correctAnswer.img,
                 options: options.map(opt => opt.name)
-            });
+            };
+
+            // Tambahkan jawaban benar di mode debug
+            if (debugMode) {
+                response.debug = {
+                    correctAnswer: correctAnswer.name,
+                    flagCode: correctAnswer.flag
+                };
+            }
+            
+            res.json(response);
             
         } catch (error) {
             res.status(500).json({
@@ -58,8 +62,7 @@ module.exports = function(app) {
             });
         }
     });
-    
-    // Endpoint: Submit jawaban
+
     app.get('/games/tebakbendera/answer', (req, res) => {
         const { sessionId, answer } = req.query;
         
@@ -85,11 +88,11 @@ module.exports = function(app) {
             status: true,
             isCorrect,
             correctAnswer: session.correctAnswer,
-            attempts: session.attempts
+            attempts: session.attempts,
+            flagImage: session.flagImage // Tambahkan gambar bendera di response
         });
     });
-    
-    // Endpoint: Dapatkan semua data bendera (opsional)
+
     app.get('/games/tebakbendera/all', async (req, res) => {
         try {
             if (flagData.length === 0) await loadFlagData();
