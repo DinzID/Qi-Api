@@ -84,6 +84,21 @@
       ]
     },
     {
+  "name": "Maker",
+  "items": [
+    {
+      "name": "Fake Free Fire",
+      "desc": "Generate Free Fire lobby images",
+      "path": "/api/fakeff?nickname=",
+      "status": "ready",
+      "params": {
+        "nickname": "Player nickname",
+        "background": "Background number (1-16)"
+      }
+    }
+  ]
+    },
+    {
       "name": "Games",
       "items": [
         {
