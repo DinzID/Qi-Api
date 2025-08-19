@@ -96,14 +96,15 @@
     {
       "name": "CreatorGames",
       "items": [
-        {
-      "name": "Brat Message API",
-      "desc": "Process brat messages with emoji support",
+       {
+      "name": "Brat Message Generator",
+      "desc": "Generate brat message images with custom text and emojis",
       "path": "/creator/brat?text=",
       "status": "ready",
       "params": {
-        "text": "Message to process (required)"
-      }
+        "text": "Message text with emojis (required)"
+      },
+      "response_type": "image"
     },
         {
       "name": "Fake Free Fire Lobby",
