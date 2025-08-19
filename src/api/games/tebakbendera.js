@@ -2,69 +2,110 @@ const axios = require('axios');
 const express = require('express');
 
 module.exports = function(app) {
-    // Flag data (can be fetched from the URL or used directly)
-    const flagData = [
-        { "flag": "AF", "img": "https://flagcdn.com/w320/af.png", "name": "Afghanistan" },
-        { "flag": "ZA", "img": "https://flagcdn.com/w320/za.png", "name": "Afrika Selatan" },
-        // ... (all other flag data from the JSON)
-        { "flag": "ZW", "img": "https://flagcdn.com/w320/zw.png", "name": "Zimbabwe" }
-    ];
-
-    // In-memory storage for user sessions
-    const userSessions = {};
-
-    // Helper function to get random flags
-    function getRandomFlags(count = 4) {
-        const shuffled = [...flagData].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
+    // URL Gist yang Anda berikan
+    const FLAG_DATA_URL = "https://gist.githubusercontent.com/DinzID/a9cc8367fab1f4c9dd0ab0c405fb6b81/raw/4e04f3fd57be8a8fb905a243e23edf3c525236dd/tebakbendera.json";
+    
+    // Cache data bendera
+    let flagData = [];
+    
+    // Fungsi untuk memuat data dari Gist
+    async function loadFlagData() {
+        try {
+            const response = await axios.get(FLAG_DATA_URL);
+            flagData = response.data;
+            console.log('Data bendera berhasil dimuat dari Gist');
+        } catch (error) {
+            console.error('Gagal memuat data bendera:', error.message);
+            throw error; // Tidak ada fallback, langsung throw error
+        }
     }
-
-    // Endpoint to start a new game
-    app.get('/tebakbendera/start', (req, res) => {
-        const sessionId = Date.now().toString(); // Simple session ID
-        const options = getRandomFlags(4);
-        const correctAnswer = options[Math.floor(Math.random() * 4)];
-        
-        userSessions[sessionId] = {
-            correctAnswer: correctAnswer.name,
-            options: options.map(opt => opt.name),
-            attempts: 0,
-            answered: false
-        };
-
-        res.json({
-            status: true,
-            sessionId,
-            question: {
+    
+    // Inisialisasi: Muat data saat API start
+    loadFlagData();
+    
+    // Session storage
+    const gameSessions = {};
+    
+    // Endpoint: Mulai permainan baru
+    app.get('/games/tebakbendera/start', async (req, res) => {
+        try {
+            if (flagData.length === 0) await loadFlagData(); // Pastikan data sudah terload
+            
+            const options = [...flagData]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 4);
+            
+            const correctAnswer = options[Math.floor(Math.random() * 4)];
+            const sessionId = Date.now().toString();
+            
+            gameSessions[sessionId] = {
+                correctAnswer: correctAnswer.name,
+                flagImage: correctAnswer.img,
+                attempts: 0
+            };
+            
+            res.json({
+                status: true,
+                sessionId,
                 flagImage: correctAnswer.img,
                 options: options.map(opt => opt.name)
-            }
-        });
+            });
+            
+        } catch (error) {
+            res.status(500).json({
+                status: false,
+                error: "Gagal memuat data bendera. Silakan coba lagi nanti."
+            });
+        }
     });
-
-    // Endpoint to submit an answer
-    app.get('/tebakbendera/answer', (req, res) => {
+    
+    // Endpoint: Submit jawaban
+    app.get('/games/tebakbendera/answer', (req, res) => {
         const { sessionId, answer } = req.query;
         
         if (!sessionId || !answer) {
-            return res.status(400).json({ 
-                status: false, 
-                error: 'Session ID and answer are required' 
+            return res.status(400).json({
+                status: false,
+                error: "Parameter sessionId dan answer diperlukan!"
             });
         }
-
-        const session = userSessions[sessionId];
+        
+        const session = gameSessions[sessionId];
         if (!session) {
-            return res.status(404).json({ 
-                status: false, 
-                error: 'Session not found' 
+            return res.status(404).json({
+                status: false,
+                error: "Session tidak valid!"
             });
         }
-
+        
         session.attempts++;
-        const isCorrect = answer.toLowerCase() === session.correctAnswer.toLowerCase();
-        session.answered = isCorrect;
-
+        const isCorrect = answer.trim().toLowerCase() === session.correctAnswer.toLowerCase();
+        
+        res.json({
+            status: true,
+            isCorrect,
+            correctAnswer: session.correctAnswer,
+            attempts: session.attempts
+        });
+    });
+    
+    // Endpoint: Dapatkan semua data bendera (opsional)
+    app.get('/games/tebakbendera/all', async (req, res) => {
+        try {
+            if (flagData.length === 0) await loadFlagData();
+            res.json({
+                status: true,
+                count: flagData.length,
+                flags: flagData
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: false,
+                error: "Gagal memuat data bendera."
+            });
+        }
+    });
+};
         res.json({
             status: true,
             isCorrect,
