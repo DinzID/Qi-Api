@@ -74,33 +74,15 @@
       "items": [
         {
           "name": "Tebak Bendera",
-          "desc": "Guess the country flag game",
-          "path": "/games/tebakbendera",
+          "desc": "Guess the country flag (data from Gist)",
+          "path": "/games/tebakbendera/start",
           "status": "ready",
-          "endpoints": [
-            {
-              "name": "Start Game",
-              "path": "/games/tebakbendera/start",
-              "method": "GET"
-            },
-            {
-              "name": "Submit Answer",
-              "path": "/games/tebakbendera/answer?sessionId=ID&answer=JAWABAN",
-              "method": "GET",
-              "params": {
-                "sessionId": "Game session ID from start endpoint",
-                "answer": "Country name answer"
-              }
-            },
-            {
-              "name": "All Flags",
-              "path": "/games/tebakbendera/all",
-              "method": "GET",
-              "desc": "Get list of all available flags"
-            }
-          ]
+          "params": {
+            "sessionId": "From /start response",
+            "answer": "Country name to guess"
+          }
         }
       ]
-    }               
+    }
   ]
 }
