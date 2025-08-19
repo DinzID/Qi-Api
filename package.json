@@ -19,6 +19,7 @@
     "chalk": "^4.1.2",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
+    "qs": "^6.11.0",
     "https": "^1.0.0",
     "node-fetch": "^2.6.1",
     "yt-search": "^2.12.1"
