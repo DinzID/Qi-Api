@@ -29,7 +29,7 @@
           "path": "/ai/qwen?text=",
           "status": "ready",
           "params": {
-            "text": "Text for qwn to respond to"
+            "text": "Text for qwen to respond to"
           }
         },
        {
