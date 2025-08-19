@@ -22,7 +22,7 @@ module.exports = function(app) {
     }
 
     // TikTok Downloader Endpoint
-    app.get('/api/tiktok', async (req, res) => {
+    app.get('/api/Dwonloader/tiktok', async (req, res) => {
         try {
             const { url } = req.query;
             
@@ -132,7 +132,7 @@ module.exports = function(app) {
     });
 
     // API Documentation Endpoint
-    app.get('/api/tiktok/docs', (req, res) => {
+    app.get('/api/Downloader/tiktok/docs', (req, res) => {
         res.json({
             name: "TikTok Downloader",
             desc: "Download TikTok videos without watermark",
