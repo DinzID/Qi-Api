@@ -47,6 +47,16 @@
     {
   "name": "Downloaders",
   "items": [
+     {
+      "name": "Instagram Downloader",
+      "desc": "Download media from Instagram posts, reels, and IG TV",
+      "path": "/downloader/instagram?url=",
+      "status": "ready",
+      "params": {
+        "url": "Instagram URL (required)",
+        "example": "https://www.instagram.com/p/C3R5lC2O4hK/"
+      }
+    },
     {
       "name": "TikTok Downloader",
       "desc": "Download TikTok videos without watermark",
