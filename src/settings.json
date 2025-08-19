@@ -32,7 +32,7 @@
             "text": "Text for qwen to respond to"
           }
         },
-       {
+        {
           "name": "HydroMind",
           "desc": "See the list of supported AI models here: https://mind.hydrooo.web.id",
           "path": "/ai/hydromind?text=&model=",
@@ -66,6 +66,39 @@
           "params": {
             "q": "Search query"
           }
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "items": [
+        {
+          "name": "Tebak Bendera",
+          "desc": "Guess the country flag game",
+          "path": "/games/tebakbendera",
+          "status": "ready",
+          "endpoints": [
+            {
+              "name": "Start Game",
+              "path": "/games/tebakbendera/start",
+              "method": "GET"
+            },
+            {
+              "name": "Submit Answer",
+              "path": "/games/tebakbendera/answer?sessionId=ID&answer=JAWABAN",
+              "method": "GET",
+              "params": {
+                "sessionId": "Game session ID from start endpoint",
+                "answer": "Country name answer"
+              }
+            },
+            {
+              "name": "All Flags",
+              "path": "/games/tebakbendera/all",
+              "method": "GET",
+              "desc": "Get list of all available flags"
+            }
+          ]
         }
       ]
     }               
