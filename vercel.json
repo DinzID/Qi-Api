@@ -5,13 +5,6 @@
       "src": "index.js",
       "use": "@vercel/node"
     },
-    {
-      "src": "api/*.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["node_modules/@napi-rs/canvas/**"]
-      }
-    }
   ],
   "routes": [
     {
