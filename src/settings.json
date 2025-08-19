@@ -25,7 +25,7 @@
         },
         {
           "name": "QwenAI",
-          "desc": "Talk with luminai",
+          "desc": "Talk with qwenai",
           "path": "/ai/qwen?text=",
           "status": "ready",
           "params": {
