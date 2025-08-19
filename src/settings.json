@@ -85,15 +85,18 @@
       ]
     },
     {
-      "name": "Games",
+      "name": "CreatorGames",
       "items": [
         {
       "name": "MLBB Tournaments",
       "desc": "Get latest Mobile Legends tournament information",
-      "path": "/tournaments/ml",
+      "path": "/creator/tournaments/ml",
       "status": "ready",
-      "params": {}
+      "params": {
+        ]
     },
+         "name": "games",
+          "items": [
         {
           "name": "Tebak Bendera",
           "desc": "Guess the country flag (data from Gist)",
