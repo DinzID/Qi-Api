@@ -1,5 +1,6 @@
 const express = require('express');
-const { createCanvas, loadImage } = require('canvas');
+// Ganti import
+const { createCanvas, loadImage } = require('@napi-rs/canvas');
 const axios = require('axios');
 const router = express.Router();
 
