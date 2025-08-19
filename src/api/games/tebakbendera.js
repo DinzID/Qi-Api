@@ -106,34 +106,3 @@ module.exports = function(app) {
         }
     });
 };
-        res.json({
-            status: true,
-            isCorrect,
-            correctAnswer: session.correctAnswer,
-            attempts: session.attempts
-        });
-    });
-
-    // Endpoint to get all flags (for reference)
-    app.get('/tebakbendera/all', (req, res) => {
-        res.json({
-            status: true,
-            count: flagData.length,
-            flags: flagData
-        });
-    });
-
-    // Endpoint information
-    app.get('/tebakbendera', (req, res) => {
-        res.json({
-            name: "Tebak Bendera",
-            desc: "Game tebak-tebakan bendera negara",
-            endpoints: {
-                start: "/tebakbendera/start",
-                answer: "/tebakbendera/answer?sessionId=ID&answer=JAWABAN",
-                allFlags: "/tebakbendera/all"
-            },
-            status: "ready"
-        });
-    });
-};
