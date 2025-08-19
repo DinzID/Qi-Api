@@ -15,7 +15,7 @@ const backgroundList = [
 const FONT_URL = 'https://files.cloudkuimages.guru/fonts/vF3tpPDf.ttf';
 
 // API Endpoint
-router.get('/Maker/fakeff', async (req, res) => {
+router.get('/api/Maker/fakeff', async (req, res) => {
   try {
     const { nickname, background } = req.query;
 
@@ -70,7 +70,7 @@ router.get('/Maker/fakeff', async (req, res) => {
 });
 
 // API Documentation
-router.get('/Maker/fakeff/docs', (req, res) => {
+router.get('/api/Maker/fakeff/docs', (req, res) => {
   res.json({
     name: "Fake Free Fire Lobby",
     desc: "Generate custom Free Fire lobby images",
