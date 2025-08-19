@@ -70,7 +70,7 @@ router.get('/api/fakeff', async (req, res) => {
 });
 
 // API Documentation
-router.get('/api/Maker/fakeff/docs', (req, res) => {
+router.get('/Maker/fakeff/docs', (req, res) => {
   res.json({
     name: "Fake Free Fire Lobby",
     desc: "Generate custom Free Fire lobby images",
