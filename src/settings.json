@@ -23,6 +23,15 @@
             "text": "Text for luminai to respond to"
           }
         },
+        {
+          "name": "QwenAI",
+          "desc": "Talk with luminai",
+          "path": "/ai/qwen?text=",
+          "status": "ready",
+          "params": {
+            "text": "Text for qwn to respond to"
+          }
+        },
        {
           "name": "HydroMind",
           "desc": "See the list of supported AI models here: https://mind.hydrooo.web.id",
