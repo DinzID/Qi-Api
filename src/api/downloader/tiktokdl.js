@@ -2,6 +2,7 @@ const axios = require('axios');
 const express = require('express');
 
 module.exports = function(app) {
+    // Helper functions
     function formatNumber(integer) {
         let numb = parseInt(integer);
         return Number(numb).toLocaleString().replace(/,/g, '.');
@@ -21,7 +22,7 @@ module.exports = function(app) {
     }
 
     // TikTok Downloader Endpoint
-    app.get('/downloader/tiktok', async (req, res) => {
+    app.get('/api/tiktok', async (req, res) => {
         try {
             const { url } = req.query;
             
@@ -131,17 +132,17 @@ module.exports = function(app) {
     });
 
     // API Documentation Endpoint
-    app.get('/downloader/tiktok/docs', (req, res) => {
+    app.get('/api/tiktok/docs', (req, res) => {
         res.json({
             name: "TikTok Downloader",
             desc: "Download TikTok videos without watermark",
-            path: "/downloader/tiktok?url=[TIKTOK_URL]",
+            path: "/api/tiktok?url=[TIKTOK_URL]",
             status: "ready",
             params: {
                 url: "TikTok video URL (required)"
             },
             example: {
-                request: "/downloader/tiktok?url=https://www.tiktok.com/@username/video/123456789",
+                request: "/api/tiktok?url=https://www.tiktok.com/@username/video/123456789",
                 response: {
                     status: true,
                     title: "Video title",
