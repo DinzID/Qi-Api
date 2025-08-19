@@ -97,6 +97,15 @@
       "name": "CreatorGames",
       "items": [
         {
+      "name": "Brat Message API",
+      "desc": "Process brat messages with emoji support",
+      "path": "/creator/brat?text=",
+      "status": "ready",
+      "params": {
+        "text": "Message to process (required)"
+      }
+    },
+        {
       "name": "Fake Free Fire Lobby",
       "desc": "Generate Free Fire lobby images with custom nickname",
       "path": "/creator/fakeff?nickname=",
