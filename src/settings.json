@@ -117,14 +117,6 @@
       },
       "response_type": "video"
     },
-    {
-      "name": "Brat Video Test",
-      "desc": "Test endpoint for Brat Video API functionality",
-      "path": "/creator/bratvid/test",
-      "status": "ready",
-      "params": {},
-      "response_type": "json"
-    },
        {
       "name": "Brat Message Generator",
       "desc": "Generate brat message images with custom text and emojis",
@@ -135,23 +127,6 @@
       },
       "response_type": "image"
     },
-        {
-      "name": "Fake Free Fire Lobby",
-      "desc": "Generate Free Fire lobby images with custom nickname",
-      "path": "/creator/fakeff?nickname=",
-      "status": "ready",
-      "params": {
-        "nickname": "Player nickname (required)",
-        "nomor": "Background number (1-16, optional)"
-      }
-    },
-    {
-      "name": "Free Fire Backgrounds",
-      "desc": "Get list of available Free Fire background images",
-      "path": "/creator/fakeff/backgrounds",
-      "status": "ready",
-      "params": {}
-      },
         {
       "name": "MLBB Tournaments",
       "desc": "Get latest Mobile Legends tournament information",
