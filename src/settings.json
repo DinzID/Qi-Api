@@ -117,12 +117,13 @@
     },
         {
       "name": "AI Photo Filters",
-      "desc": " Apply various AI filters to photos LIST :tohijab,tosdmtinggi,tohitam dll. bisa di cek di api list",
-      "path": "/creator/filter/:filterName?url=",
+      "desc": "Apply various AI filters to photos - tohijab, tosdmtinggi, tohitam, toghibli, tozombie, etc.",
+      "path": "/creator/filter?url=&method=&id=",
       "status": "ready",
       "params": {
-        "filterName": "Filter name (required in path)",
-        "url": "Image URL to filter (required)"
+        "url": "Image URL to filter (required)",
+        "method": "Filter method name (optional)",
+        "id": "Filter ID (optional)"
       },
       "response_type": "image"
     },
