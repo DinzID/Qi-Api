@@ -117,7 +117,7 @@
     },
         {
       "name": "AI Photo Filters",
-      "desc": " Apply various AI filters to photos LIST :tohijab,tosdmtinggi,tohitam dll. bisa di cek di api list"
+      "desc": " Apply various AI filters to photos LIST :tohijab,tosdmtinggi,tohitam dll. bisa di cek di api list",
       "path": "/creator/filter/:filterName?url=",
       "status": "ready",
       "params": {
