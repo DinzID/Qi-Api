@@ -107,6 +107,16 @@
     {
       "name": "CreatorGames",
       "items": [
+         {
+      "name": "Brat Video Generator",
+      "desc": "Generate brat message videos with custom text and emojis",
+      "path": "/creator/bratvid?text=",
+      "status": "ready",
+      "params": {
+        "text": "Message text with emojis (required)"
+      },
+      "response_type": "video"
+    },
        {
       "name": "Brat Message Generator",
       "desc": "Generate brat message images with custom text and emojis",
