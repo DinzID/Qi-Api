@@ -115,17 +115,114 @@
       "params": {},
       "response_type": "json"
     },
-        {
+{
       "name": "AI Photo Filters",
-      "desc": "Apply various AI filters to photos - tohijab, tosdmtinggi, tohitam, toghibli, tozombie, etc.",
-      "path": "/creator/filter?url=&method=&id=",
+      "desc": "Apply various AI filters to photos - 16+ filters available",
+      "path": "/creator/filter?url=&method=",
       "status": "ready",
       "params": {
         "url": "Image URL to filter (required)",
-        "method": "Filter method name (optional)",
-        "id": "Filter ID (optional)"
+        "method": "Filter method name (required)"
       },
-      "response_type": "image"
+      "response_type": "image",
+      "filters": [
+        {
+          "method": "tobabi",
+          "description": "🤱 Baby Filter - Membuat wajah terlihat seperti bayi lucu",
+          "category": "Fun",
+          "example": "Wajah dewasa menjadi seperti bayi"
+        },
+        {
+          "method": "tobotak",
+          "description": "👨‍🦲 Botak Filter - Membuat rambut menjadi botak",
+          "category": "Style",
+          "example": "Rambut panjang menjadi botak"
+        },
+        {
+          "method": "tobrewok",
+          "description": "🧔 Brewok Filter - Menambahkan jenggot dan brewok",
+          "category": "Beard",
+          "example": "Wajah bersih menjadi berjenggot"
+        },
+        {
+          "method": "tohijab",
+          "description": "🧕 Hijab Filter - Menambahkan hijab pada foto",
+          "category": "Religion",
+          "example": "Wanita tanpa hijab menjadi berhijab"
+        },
+        {
+          "method": "toghibli",
+          "description": "🎨 Ghibli Filter - Gaya anime Studio Ghibli yang aesthetic",
+          "category": "Anime",
+          "example": "Foto biasa menjadi anime style"
+        },
+        {
+          "method": "tolego",
+          "description": "🧱 Lego Filter - Mengubah wajah menjadi karakter lego",
+          "category": "Fun",
+          "example": "Wajah manusia menjadi lego"
+        },
+        {
+          "method": "tohitam",
+          "description": "⚫ Hitam Filter - Filter efek hitam dan gelap",
+          "category": "Color",
+          "example": "Foto normal menjadi hitam putih gelap"
+        },
+        {
+          "method": "tokacamatai",
+          "description": "👓 Kacamata Filter - Menambahkan kacamata pada wajah",
+          "category": "Accessory",
+          "example": "Wajah tanpa kacamata menjadi berkacamata"
+        },
+        {
+          "method": "toputih",
+          "description": "⚪ Putih Filter - Filter efek putih dan terang",
+          "category": "Color",
+          "example": "Foto normal menjadi putih terang"
+        },
+        {
+          "method": "topacar",
+          "description": "💑 Pacar Filter - Efek romantic couple",
+          "category": "Relationship",
+          "example": "Foto single menjadi berpasangan"
+        },
+        {
+          "method": "topeci",
+          "description": "👳 Peci Filter - Menambahkan peci/songkok",
+          "category": "Religion",
+          "example": "Kepala tanpa peci menjadi berpeci"
+        },
+        {
+          "method": "tosdmtinggi",
+          "description": "📈 SDM Tinggi Filter - Efek professional",
+          "category": "Professional",
+          "example": "Foto biasa menjadi professional"
+        },
+        {
+          "method": "topunk",
+          "description": "🤘 Punk Filter - Gaya punk rock",
+          "category": "Style",
+          "example": "Penampilan normal menjadi punk"
+        },
+        {
+          "method": "toreal",
+          "description": "🖼️ Real Filter - Efek realistik",
+          "category": "Enhancement",
+          "example": "Foto menjadi lebih realistik"
+        },
+        {
+          "method": "totua",
+          "description": "👴 Tua Filter - Membuat wajah terlihat lebih tua",
+          "category": "Age",
+          "example": "Wajah muda menjadi tua"
+        },
+        {
+          "method": "tozombie",
+          "description": "🧟 Zombie Filter - Efek zombie horror",
+          "category": "Horror",
+          "example": "Wajah normal menjadi zombie"
+        }
+      ]
     },
            {
       "name": "Brat Video Generator",
