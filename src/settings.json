@@ -108,39 +108,17 @@
       "name": "CreatorGames",
       "items": [
         {
+           {
+      "name": "Filter List",
+      "desc": "Get list of all available AI filters",
+      "path": "/creator/filter",
+      "status": "ready",
+      "params": {},
+      "response_type": "json"
+    },
+        {
       "name": "AI Photo Filters",
-      "desc": `Apply various AI filters to photos/nLIST TO FILTER/n1. tobabi - Baby Filter
-      ➤ Membuat foto seperti bayi
-2. tobotak - Botak Filter
-      ➤ Membuat foto menjadi botak
-3. tobrewok - Brewok Filter
-      ➤ Menambahkan brewok/jenggot
-4. tohijab - Hijab Filter
-      ➤ Menambahkan hijab
-5. toghibli - Ghibli Filter
-      ➤ Gaya anime Studio Ghibli
-6. tolego - Lego Filter
-      ➤ Mengubah menjadi lego
-7. tohitam - Hitam Filter
-      ➤ Filter hitam
-8. tokacamatai - Kacamata Filter
-      ➤ Menambahkan kacamata
-9. toputih - Putih Filter
-      ➤ Filter putih
-10. topacar - Pacar Filter
-        ➤ Filter pacar
-11. topeci - Peci Filter
-        ➤ Menambahkan peci
-12. tosdmtinggi - SDM Tinggi Filter
-        ➤ Filter SDM tinggi
-13. topunk - Punk Filter
-        ➤ Gaya punk
-14. toreal - Real Filter
-        ➤ Filter real
-15. totua - Tua Filter
-        ➤ Membuat foto menjadi tua
-16. tozombie - Zombie Filter
-        ➤ Mengubah menjadi zombie`,
+      "desc": " Apply various AI filters to photos LIST :tohijab,tosdmtinggi,tohitam dll. bisa di cek di api list"
       "path": "/creator/filter/:filterName?url=",
       "status": "ready",
       "params": {
