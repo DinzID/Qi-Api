@@ -1,325 +1,323 @@
 const axios = require('axios');
 
 module.exports = function(app) {
-    // Daftar semua filter yang tersedia
+    // Daftar semua filter dengan deskripsi lengkap
     const filters = {
-        tobabi: {
-            name: 'Baby Filter',
-            description: 'Membuat foto seperti bayi',
+        '1': {
+            id: '1',
+            name: 'tobabi',
+            description: '🤱 Baby Filter - Membuat wajah terlihat seperti bayi lucu',
+            example: 'Wajah dewasa menjadi seperti bayi',
+            category: 'Fun',
             url: 'https://api-faa-skuarta.vercel.app/faa/tobabi?url='
         },
-        tobotak: {
-            name: 'Botak Filter',
-            description: 'Membuat foto menjadi botak',
+        '2': {
+            id: '2', 
+            name: 'tobotak',
+            description: '👨‍🦲 Botak Filter - Membuat rambut menjadi botak',
+            example: 'Rambut panjang menjadi botak',
+            category: 'Style',
             url: 'https://api-faa-skuarta.vercel.app/faa/tobotak?url='
         },
-        tobrewok: {
-            name: 'Brewok Filter',
-            description: 'Menambahkan brewok/jenggot',
+        '3': {
+            id: '3',
+            name: 'tobrewok',
+            description: '🧔 Brewok Filter - Menambahkan jenggot dan brewok',
+            example: 'Wajah bersih menjadi berjenggot',
+            category: 'Beard',
             url: 'https://api-faa-skuarta.vercel.app/faa/tobrewok?url='
         },
-        tohijab: {
-            name: 'Hijab Filter',
-            description: 'Menambahkan hijab',
+        '4': {
+            id: '4',
+            name: 'tohijab',
+            description: '🧕 Hijab Filter - Menambahkan hijab pada foto',
+            example: 'Wanita tanpa hijab menjadi berhijab',
+            category: 'Religion',
             url: 'https://api-faa-skuarta.vercel.app/faa/tohijab?url='
         },
-        toghibli: {
-            name: 'Ghibli Filter',
-            description: 'Gaya anime Studio Ghibli',
+        '5': {
+            id: '5',
+            name: 'toghibli',
+            description: '🎨 Ghibli Filter - Gaya anime Studio Ghibli yang aesthetic',
+            example: 'Foto biasa menjadi anime style',
+            category: 'Anime',
             url: 'https://api-faa-skuarta.vercel.app/faa/toghibli?url='
         },
-        tolego: {
-            name: 'Lego Filter',
-            description: 'Mengubah menjadi lego',
+        '6': {
+            id: '6',
+            name: 'tolego',
+            description: '🧱 Lego Filter - Mengubah wajah menjadi karakter lego',
+            example: 'Wajah manusia menjadi lego',
+            category: 'Fun',
             url: 'https://api-faa-skuarta.vercel.app/faa/tolego?url='
         },
-        tohitam: {
-            name: 'Hitam Filter',
-            description: 'Filter hitam',
+        '7': {
+            id: '7',
+            name: 'tohitam',
+            description: '⚫ Hitam Filter - Filter efek hitam dan gelap',
+            example: 'Foto normal menjadi hitam putih gelap',
+            category: 'Color',
             url: 'https://api-faa-skuarta.vercel.app/faa/tohitam?url='
         },
-        tokacamatai: {
-            name: 'Kacamata Filter',
-            description: 'Menambahkan kacamata',
+        '8': {
+            id: '8',
+            name: 'tokacamatai',
+            description: '👓 Kacamata Filter - Menambahkan kacamata pada wajah',
+            example: 'Wajah tanpa kacamata menjadi berkacamata',
+            category: 'Accessory',
             url: 'https://api-faa-skuarta.vercel.app/faa/tokacamatai?url='
         },
-        toputih: {
-            name: 'Putih Filter',
-            description: 'Filter putih',
+        '9': {
+            id: '9',
+            name: 'toputih',
+            description: '⚪ Putih Filter - Filter efek putih dan terang',
+            example: 'Foto normal menjadi putih terang',
+            category: 'Color',
             url: 'https://api-faa-skuarta.vercel.app/faa/toputih?url='
         },
-        topacar: {
-            name: 'Pacar Filter',
-            description: 'Filter pacar',
+        '10': {
+            id: '10',
+            name: 'topacar',
+            description: '💑 Pacar Filter - Efek romantic couple',
+            example: 'Foto single menjadi berpasangan',
+            category: 'Relationship',
             url: 'https://api-faa-skuarta.vercel.app/faa/topacar?url='
         },
-        topeci: {
-            name: 'Peci Filter',
-            description: 'Menambahkan peci',
+        '11': {
+            id: '11',
+            name: 'topeci',
+            description: '👳 Peci Filter - Menambahkan peci/songkok',
+            example: 'Kepala tanpa peci menjadi berpeci',
+            category: 'Religion',
             url: 'https://api-faa-skuarta.vercel.app/faa/topeci?url='
         },
-        tosdmtinggi: {
-            name: 'SDM Tinggi Filter',
-            description: 'Filter SDM tinggi',
+        '12': {
+            id: '12',
+            name: 'tosdmtinggi',
+            description: '📈 SDM Tinggi Filter - Efek professional',
+            example: 'Foto biasa menjadi professional',
+            category: 'Professional',
             url: 'https://api-faa-skuarta.vercel.app/faa/tosdmtinggi?url='
         },
-        topunk: {
-            name: 'Punk Filter',
-            description: 'Gaya punk',
+        '13': {
+            id: '13',
+            name: 'topunk',
+            description: '🤘 Punk Filter - Gaya punk rock',
+            example: 'Penampilan normal menjadi punk',
+            category: 'Style',
             url: 'https://api-faa-skuarta.vercel.app/faa/topunk?url='
         },
-        toreal: {
-            name: 'Real Filter',
-            description: 'Filter real',
+        '14': {
+            id: '14',
+            name: 'toreal',
+            description: '🖼️ Real Filter - Efek realistik',
+            example: 'Foto menjadi lebih realistik',
+            category: 'Enhancement',
             url: 'https://api-faa-skuarta.vercel.app/faa/toreal?url='
         },
-        totua: {
-            name: 'Tua Filter',
-            description: 'Membuat foto menjadi tua',
+        '15': {
+            id: '15',
+            name: 'totua',
+            description: '👴 Tua Filter - Membuat wajah terlihat lebih tua',
+            example: 'Wajah muda menjadi tua',
+            category: 'Age',
             url: 'https://api-faa-skuarta.vercel.app/faa/totua?url='
         },
-        tozombie: {
-            name: 'Zombie Filter',
-            description: 'Mengubah menjadi zombie',
+        '16': {
+            id: '16',
+            name: 'tozombie',
+            description: '🧟 Zombie Filter - Efek zombie horror',
+            example: 'Wajah normal menjadi zombie',
+            category: 'Horror',
             url: 'https://api-faa-skuarta.vercel.app/faa/tozombie?url='
         }
     };
 
-    // Main endpoint untuk semua filter
-    app.get('/creator/filter/:filterName', async (req, res) => {
+    // Main endpoint dengan pilihan method
+    app.get('/creator/filter', async (req, res) => {
         try {
-            const { filterName } = req.params;
-            const { url } = req.query;
+            const { url, method, id } = req.query;
 
             // Validasi input
             if (!url) {
                 return res.status(400).json({
                     status: false,
                     error: 'Parameter url diperlukan',
-                    example: `/creator/filter/${filterName}?url=https://example.com/photo.jpg`
+                    example: '/creator/filter?url=https://example.com/photo.jpg&method=toghibli'
                 });
             }
 
-            if (!filters[filterName]) {
+            // Cari filter berdasarkan method atau id
+            let filter;
+            if (method) {
+                filter = Object.values(filters).find(f => f.name === method);
+            } else if (id) {
+                filter = filters[id];
+            } else {
+                return res.status(400).json({
+                    status: false,
+                    error: 'Pilih method atau id',
+                    example: '/creator/filter?url=https://example.com/photo.jpg&method=toghibli',
+                    or: '/creator/filter?url=https://example.com/photo.jpg&id=5'
+                });
+            }
+
+            if (!filter) {
                 return res.status(404).json({
                     status: false,
                     error: 'Filter tidak ditemukan',
-                    available_filters: Object.keys(filters)
+                    available_methods: Object.values(filters).map(f => f.name),
+                    available_ids: Object.keys(filters)
                 });
             }
 
-            console.log(`🎨 Applying ${filterName} filter to:`, url);
+            console.log(`🎨 Applying ${filter.name} filter (ID: ${filter.id})`);
 
-            const filter = filters[filterName];
             const apiUrl = `${filter.url}${encodeURIComponent(url)}`;
-
-            console.log('🔗 External API URL:', apiUrl);
-
-            // Request ke API external
             const response = await axios({
                 method: 'GET',
                 url: apiUrl,
                 responseType: 'arraybuffer',
-                timeout: 30000,
+                timeout: 25000,
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Accept': 'image/*, */*'
+                    'Accept': 'image/*'
                 }
             });
 
-            // Deteksi content type
             const contentType = response.headers['content-type'] || 'image/jpeg';
-            console.log('✅ Filter applied successfully');
-            console.log('📊 Content-Type:', contentType);
-            console.log('📏 Content-Length:', response.data.length);
-
-            // Set headers dan kirim image
+            
             res.setHeader('Content-Type', contentType);
-            res.setHeader('Content-Length', response.data.length);
+            res.setHeader('X-Filter-ID', filter.id);
             res.setHeader('X-Filter-Name', filter.name);
-            res.setHeader('X-Filter-Description', filter.description);
-            res.setHeader('Cache-Control', 'public, max-age=3600');
+            res.setHeader('X-Filter-Category', filter.category);
+            res.setHeader('Cache-Control', 'public, max-age=1800');
             
             res.send(response.data);
 
         } catch (error) {
-            console.error('❌ Filter API Error:', error.message);
-
-            if (error.response) {
-                res.status(error.response.status).json({
-                    status: false,
-                    error: 'External API error',
-                    status_code: error.response.status,
-                    details: 'Filter mungkin sedang tidak bekerja'
-                });
-            } else if (error.request) {
-                res.status(408).json({
-                    status: false,
-                    error: 'Request timeout',
-                    details: 'Server filter terlalu lama merespons'
-                });
-            } else {
-                res.status(500).json({
-                    status: false,
-                    error: 'Internal server error',
-                    details: error.message
-                });
-            }
-        }
-    });
-
-    // Endpoint untuk apply multiple filters
-    app.get('/creator/filter/multiple', async (req, res) => {
-        try {
-            const { url, filters: filterList } = req.query;
-
-            if (!url || !filterList) {
-                return res.status(400).json({
-                    status: false,
-                    error: 'Parameter url dan filters diperlukan',
-                    example: '/creator/filter/multiple?url=https://example.com/photo.jpg&filters=toghibli,tozombie'
-                });
-            }
-
-            const filterArray = filterList.split(',');
-            const results = {};
-
-            for (const filterName of filterArray) {
-                if (filters[filterName]) {
-                    try {
-                        const filterUrl = `${filters[filterName].url}${encodeURIComponent(url)}`;
-                        const response = await axios.get(filterUrl, {
-                            responseType: 'arraybuffer',
-                            timeout: 15000
-                        });
-                        
-                        results[filterName] = {
-                            status: 'success',
-                            url: filterUrl,
-                            content_type: response.headers['content-type']
-                        };
-                    } catch (error) {
-                        results[filterName] = {
-                            status: 'error',
-                            error: error.message
-                        };
-                    }
-                } else {
-                    results[filterName] = {
-                        status: 'error',
-                        error: 'Filter not found'
-                    };
-                }
-            }
-
-            res.json({
-                status: true,
-                original_url: url,
-                results: results
-            });
-
-        } catch (error) {
+            console.error('❌ Filter Error:', error.message);
+            
             res.status(500).json({
                 status: false,
-                error: error.message
+                error: 'Gagal memproses filter',
+                message: error.message,
+                solution: 'Coba dengan URL gambar yang berbeda'
             });
         }
     });
 
     // Endpoint untuk list semua filter
-    app.get('/creator/filter', (req, res) => {
-        const filterList = {};
-        for (const [key, filter] of Object.entries(filters)) {
-            filterList[key] = {
-                name: filter.name,
-                description: filter.description,
-                endpoint: `/creator/filter/${key}?url=[image_url]`
-            };
-        }
+    app.get('/creator/filter/list', (req, res) => {
+        const filterList = Object.values(filters).map(filter => ({
+            id: filter.id,
+            name: filter.name,
+            description: filter.description,
+            category: filter.category,
+            example: filter.example,
+            usage: `/creator/filter?url=[image_url]&method=${filter.name}`,
+            usage_id: `/creator/filter?url=[image_url]&id=${filter.id}`
+        }));
 
         res.json({
             status: true,
-            total_filters: Object.keys(filterList).length,
+            total_filters: filterList.length,
+            usage: {
+                by_method: '/creator/filter?url=[image_url]&method=toghibli',
+                by_id: '/creator/filter?url=[image_url]&id=5',
+                list: '/creator/filter/list'
+            },
             filters: filterList
         });
     });
 
-    // Health check untuk semua filter
-    app.get('/creator/filter/health', async (req, res) => {
-        try {
-            const testUrl = 'https://via.placeholder.com/150'; // Test image
-            const testResults = {};
+    // Endpoint untuk info filter spesifik
+    app.get('/creator/filter/info', (req, res) => {
+        const { method, id } = req.query;
+        
+        let filter;
+        if (method) {
+            filter = Object.values(filters).find(f => f.name === method);
+        } else if (id) {
+            filter = filters[id];
+        } else {
+            return res.status(400).json({
+                status: false,
+                error: 'Pilih method atau id parameter',
+                example: '/creator/filter/info?method=toghibli',
+                or: '/creator/filter/info?id=5'
+            });
+        }
 
-            // Test 3 filter pertama
-            const testFilters = Object.keys(filters).slice(0, 3);
-            
-            for (const filterName of testFilters) {
-                try {
-                    const filterUrl = `${filters[filterName].url}${encodeURIComponent(testUrl)}`;
-                    const response = await axios.get(filterUrl, {
-                        timeout: 10000,
-                        validateStatus: () => true
-                    });
+        if (!filter) {
+            return res.status(404).json({
+                status: false,
+                error: 'Filter tidak ditemukan'
+            });
+        }
 
-                    testResults[filterName] = {
-                        status: response.status,
-                        content_type: response.headers['content-type'],
-                        working: response.status === 200
-                    };
-                } catch (error) {
-                    testResults[filterName] = {
-                        status: 'error',
-                        error: error.message,
-                        working: false
-                    };
-                }
+        res.json({
+            status: true,
+            filter: {
+                id: filter.id,
+                name: filter.name,
+                description: filter.description,
+                category: filter.category,
+                example: filter.example,
+                api_url: filter.url + '[image_url]',
+                usage: `/creator/filter?url=[image_url]&method=${filter.name}`
             }
+        });
+    });
+
+    // Health check
+    app.get('/creator/filter/health', (req, res) => {
+        res.json({
+            status: true,
+            message: 'Filter API is running',
+            total_filters: Object.keys(filters).length,
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    // Endpoint untuk test cepat
+    app.get('/creator/filter/test', async (req, res) => {
+        try {
+            const { method, id } = req.query;
+            const testUrl = 'https://via.placeholder.com/150';
+            
+            let filter;
+            if (method) {
+                filter = Object.values(filters).find(f => f.name === method);
+            } else if (id) {
+                filter = filters[id];
+            } else {
+                filter = filters['5']; // Default tohibli
+            }
+
+            if (!filter) {
+                return res.status(404).json({ error: 'Filter not found' });
+            }
+
+            const apiUrl = `${filter.url}${encodeURIComponent(testUrl)}`;
+            const response = await axios.get(apiUrl, {
+                timeout: 15000,
+                validateStatus: () => true
+            });
 
             res.json({
                 status: true,
-                message: 'Filter API health check',
-                test_results: testResults,
-                timestamp: new Date().toISOString()
+                filter: filter.name,
+                id: filter.id,
+                response_status: response.status,
+                content_type: response.headers['content-type'],
+                content_length: response.data?.length
             });
 
         } catch (error) {
             res.json({
                 status: false,
                 error: error.message
-            });
-        }
-    });
-
-    // Demo endpoint dengan filter populer
-    app.get('/creator/filter/demo/:filterName', async (req, res) => {
-        try {
-            const { filterName } = req.params;
-            const demoImage = 'https://via.placeholder.com/300'; // Placeholder image
-
-            if (!filters[filterName]) {
-                return res.status(404).json({
-                    status: false,
-                    error: 'Filter tidak ditemukan'
-                });
-            }
-
-            const apiUrl = `${filters[filterName].url}${encodeURIComponent(demoImage)}`;
-            const response = await axios({
-                method: 'GET',
-                url: apiUrl,
-                responseType: 'arraybuffer',
-                timeout: 20000
-            });
-
-            res.setHeader('Content-Type', response.headers['content-type'] || 'image/jpeg');
-            res.send(response.data);
-
-        } catch (error) {
-            res.json({
-                status: false,
-                error: 'Demo failed',
-                filter: filterName,
-                message: error.message
             });
         }
     });
