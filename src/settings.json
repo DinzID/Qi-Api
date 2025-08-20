@@ -108,7 +108,6 @@
       "name": "CreatorGames",
       "items": [
         {
-           {
       "name": "Filter List",
       "desc": "Get list of all available AI filters",
       "path": "/creator/filter",
