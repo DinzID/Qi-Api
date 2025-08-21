@@ -96,7 +96,7 @@
         {
       "name": "Sticker Search",
       "desc": "Search for sticker packs on getstickerpack.com",
-      "path": "/creator/sticker/search?query=",
+      "path": "/search/sticker/search?query=",
       "status": "ready",
       "params": {
         "query": "Search query (required)"
@@ -106,7 +106,7 @@
     {
       "name": "Sticker Pack Details",
       "desc": "Get detailed information about a specific sticker pack",
-      "path": "/creator/sticker/details/",
+      "path": "/search/sticker/details/",
       "status": "ready",
       "params": {
         "packId": "Sticker pack ID (required in path)"
@@ -130,7 +130,7 @@
         {
       "name": "Filter List",
       "desc": "Get list of all available AI filters",
-      "path": "/search/filter",
+      "path": "/creator/filter",
       "status": "ready",
       "params": {},
       "response_type": "json"
@@ -138,7 +138,7 @@
 {
       "name": "AI Photo Filters",
       "desc": "Apply various AI filters to photos - 16+ filters available",
-      "path": "/search/filter?url=&method=",
+      "path": "/creator/filter?url=&method=",
       "status": "ready",
       "params": {
         "url": "Image URL to filter (required)",
