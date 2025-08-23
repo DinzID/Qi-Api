@@ -59,6 +59,26 @@
   "name": "Downloaders",
   "items": [
      {
+      "name": "YouTube MP3 Search",
+      "desc": "Search YouTube videos and get MP3 download links",
+      "path": "/downloader/ytmp3/search?query=",
+      "status": "ready",
+      "params": {
+        "query": "Search keywords (required)"
+      },
+      "response_type": "json"
+    },
+    {
+      "name": "YouTube MP3 Download",
+      "desc": "Download MP3 from YouTube URL",
+      "path": "/downloader/ytmp3/download?url=",
+      "status": "ready",
+      "params": {
+        "url": "YouTube URL (required)"
+      },
+      "response_type": "json"
+    },
+     {
       "name": "Instagram Downloader",
       "desc": "Download media from Instagram posts, reels, and IG TV",
       "path": "/downloader/instagram?url=",
