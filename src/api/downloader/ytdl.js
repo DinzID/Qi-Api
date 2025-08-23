@@ -16,14 +16,43 @@ module.exports = function(app) {
         }
     };
 
-    // Helper function
-    function handleResponse(success, code, result) {
+    // Helper function untuk format response yang benar
+    function handleVredenResponse(data, query = null, url = null) {
         return {
-            success,
-            code,
-            result,
-            timestamp: new Date().toISOString(),
-            api_source: 'api.vreden.my.id'
+            status: 200,
+            creator: "DinzID",
+            result: {
+                status: data.status !== false,
+                creator: "DinzID",
+                metadata: {
+                    type: "video",
+                    videoId: data.metadata?.videoId || data.id || null,
+                    url: data.metadata?.url || `https://youtube.com/watch?v=${data.id}`,
+                    title: data.metadata?.title || data.title || null,
+                    description: data.metadata?.description || null,
+                    image: data.metadata?.image || data.thumb || null,
+                    thumbnail: data.metadata?.thumbnail || data.thumb || null,
+                    seconds: data.metadata?.seconds || data.duration?.seconds || null,
+                    timestamp: data.metadata?.timestamp || data.duration || null,
+                    duration: {
+                        seconds: data.metadata?.duration?.seconds || data.duration?.seconds || null,
+                        timestamp: data.metadata?.duration?.timestamp || data.duration || null
+                    },
+                    ago: data.metadata?.ago || data.uploaded || null,
+                    views: data.metadata?.views || data.views || null,
+                    author: {
+                        name: data.metadata?.author?.name || data.channel || null,
+                        url: data.metadata?.author?.url || null
+                    }
+                },
+                download: {
+                    status: data.download?.status !== false,
+                    quality: data.download?.quality || data.quality || "128kbps",
+                    availableQuality: data.download?.availableQuality || [92, 128, 256, 320],
+                    url: data.download?.url || data.url || data.dl_url || null,
+                    filename: data.download?.filename || `${data.title} (${data.quality || '128kbps'}).mp3`
+                }
+            }
         };
     }
 
@@ -33,10 +62,12 @@ module.exports = function(app) {
             const { query } = req.query;
 
             if (!query) {
-                return res.status(400).json(handleResponse(false, 400, {
-                    error: 'Parameter query diperlukan',
-                    example: '/downloader/ytmp3/search?query=lagu%20barat'
-                }));
+                return res.status(400).json({
+                    status: 400,
+                    creator: "DinzID",
+                    error: "Parameter query diperlukan",
+                    example: "/downloader/ytmp3/search?query=lagu%20barat"
+                });
             }
 
             console.log(`🔍 Searching MP3 for: ${query}`);
@@ -48,54 +79,18 @@ module.exports = function(app) {
                 timeout: 30000
             });
 
-            const data = response.data;
-
-            // Format response yang konsisten
-            const result = {
-                query: query,
-                video: {
-                    id: data.id || null,
-                    title: data.title || null,
-                    duration: data.duration || null,
-                    thumbnail: data.thumb || null,
-                    channel: data.channel || null,
-                    views: data.views || null
-                },
-                audio: {
-                    url: data.url || null,
-                    quality: data.quality || null,
-                    size: data.size || null,
-                    format: data.format || 'mp3'
-                },
-                download: data.dl_url || null,
-                metadata: {
-                    uploaded: data.uploaded || null,
-                    uploaded_date: data.uploaded_date || null
-                }
-            };
-
-            res.json(handleResponse(true, 200, result));
+            const result = handleVredenResponse(response.data, query);
+            res.json(result);
 
         } catch (error) {
             console.error('YTMP3 Search Error:', error.message);
 
-            if (error.response) {
-                res.status(error.response.status).json(handleResponse(false, error.response.status, {
-                    error: 'API external error',
-                    status: error.response.status,
-                    message: error.response.statusText
-                }));
-            } else if (error.request) {
-                res.status(408).json(handleResponse(false, 408, {
-                    error: 'Request timeout',
-                    message: 'Tidak dapat terhubung ke server external'
-                }));
-            } else {
-                res.status(500).json(handleResponse(false, 500, {
-                    error: 'Internal server error',
-                    message: error.message
-                }));
-            }
+            res.status(500).json({
+                status: 500,
+                creator: "DinzID",
+                error: "Internal server error",
+                message: error.message
+            });
         }
     });
 
@@ -105,18 +100,22 @@ module.exports = function(app) {
             const { url } = req.query;
 
             if (!url) {
-                return res.status(400).json(handleResponse(false, 400, {
-                    error: 'Parameter url diperlukan',
-                    example: '/downloader/ytmp3/download?url=https://youtu.be/VIDEO_ID'
-                }));
+                return res.status(400).json({
+                    status: 400,
+                    creator: "api.vreden.my.id",
+                    error: "Parameter url diperlukan",
+                    example: "/downloader/ytmp3/download?url=https://youtu.be/VIDEO_ID"
+                });
             }
 
             // Validasi URL YouTube
             if (!url.includes('youtube.com/') && !url.includes('youtu.be/')) {
-                return res.status(400).json(handleResponse(false, 400, {
-                    error: 'URL harus berupa link YouTube',
-                    example: 'https://youtube.com/watch?v=... atau https://youtu.be/...'
-                }));
+                return res.status(400).json({
+                    status: 400,
+                    creator: "api.vreden.my.id",
+                    error: "URL harus berupa link YouTube",
+                    example: "https://youtube.com/watch?v=... atau https://youtu.be/..."
+                });
             }
 
             console.log(`⬇️ Downloading MP3 from: ${url}`);
@@ -125,52 +124,21 @@ module.exports = function(app) {
             
             const response = await axios.get(apiUrl, {
                 headers: vredenAPI.headers,
-                timeout: 45000 // 45 detik untuk download
+                timeout: 45000
             });
 
-            const data = response.data;
-
-            const result = {
-                original_url: url,
-                video: {
-                    id: data.id || null,
-                    title: data.title || null,
-                    duration: data.duration || null,
-                    thumbnail: data.thumb || null
-                },
-                audio: {
-                    download_url: data.url || null,
-                    direct_url: data.dl_url || null,
-                    quality: data.quality || null,
-                    size: data.size || null,
-                    format: data.format || 'mp3'
-                },
-                success: data.success || false,
-                message: data.message || 'Download ready'
-            };
-
-            res.json(handleResponse(true, 200, result));
+            const result = handleVredenResponse(response.data, null, url);
+            res.json(result);
 
         } catch (error) {
             console.error('YTMP3 Download Error:', error.message);
 
-            if (error.response) {
-                res.status(error.response.status).json(handleResponse(false, error.response.status, {
-                    error: 'Download failed',
-                    status: error.response.status,
-                    message: error.response.data?.message || error.response.statusText
-                }));
-            } else if (error.request) {
-                res.status(408).json(handleResponse(false, 408, {
-                    error: 'Download timeout',
-                    message: 'Proses download terlalu lama'
-                }));
-            } else {
-                res.status(500).json(handleResponse(false, 500, {
-                    error: 'Internal server error',
-                    message: error.message
-                }));
-            }
+            res.status(500).json({
+                status: 500,
+                creator: "api.vreden.my.id",
+                error: "Download failed",
+                message: error.message
+            });
         }
     });
 
@@ -180,9 +148,11 @@ module.exports = function(app) {
             const { url } = req.query;
 
             if (!url) {
-                return res.status(400).json(handleResponse(false, 400, {
-                    error: 'Parameter url diperlukan'
-                }));
+                return res.status(400).json({
+                    status: 400,
+                    creator: "api.vreden.my.id",
+                    error: "Parameter url diperlukan"
+                });
             }
 
             const apiUrl = `${vredenAPI.baseUrl}${vredenAPI.endpoints.ytmp3}${encodeURIComponent(url)}`;
@@ -191,12 +161,14 @@ module.exports = function(app) {
                 timeout: 30000
             });
 
-            const audioUrl = response.data.url || response.data.dl_url;
+            const audioUrl = response.data.url || response.data.dl_url || response.data.download?.url;
 
             if (!audioUrl) {
-                return res.status(404).json(handleResponse(false, 404, {
-                    error: 'Audio URL tidak ditemukan'
-                }));
+                return res.status(404).json({
+                    status: 404,
+                    creator: "api.vreden.my.id",
+                    error: "Audio URL tidak ditemukan"
+                });
             }
 
             // Redirect langsung ke audio
@@ -204,10 +176,12 @@ module.exports = function(app) {
 
         } catch (error) {
             console.error('Direct Download Error:', error.message);
-            res.status(500).json(handleResponse(false, 500, {
-                error: 'Direct download failed',
+            res.status(500).json({
+                status: 500,
+                creator: "api.vreden.my.id",
+                error: "Direct download failed",
                 message: error.message
-            }));
+            });
         }
     });
 
@@ -222,50 +196,93 @@ module.exports = function(app) {
                 validateStatus: () => true
             });
 
-            res.json(handleResponse(true, 200, {
-                status: 'healthy',
-                api_accessible: response.status === 200,
-                response_status: response.status,
-                test_query: 'test'
-            }));
+            res.json({
+                status: 200,
+                creator: "api.vreden.my.id",
+                result: {
+                    status: response.status === 200,
+                    api_accessible: response.status === 200,
+                    response_status: response.status,
+                    test_query: "test"
+                }
+            });
 
         } catch (error) {
-            res.json(handleResponse(false, 500, {
-                status: 'unhealthy',
-                error: error.message
-            }));
+            res.json({
+                status: 500,
+                creator: "api.vreden.my.id",
+                error: "Health check failed",
+                message: error.message
+            });
         }
     });
 
     // Endpoint: Info
     app.get('/downloader/ytmp3/info', (req, res) => {
-        res.json(handleResponse(true, 200, {
-            service: 'YouTube to MP3 Downloader',
-            version: '1.0',
-            source: 'api.vreden.my.id',
-            endpoints: {
-                search: '/downloader/ytmp3/search?query=[keywords]',
-                download: '/downloader/ytmp3/download?url=[youtube_url]',
-                direct: '/downloader/ytmp3/direct?url=[youtube_url]',
-                health: '/downloader/ytmp3/health',
-                info: '/downloader/ytmp3/info'
-            },
-            features: [
-                'Search YouTube videos and convert to MP3',
-                'Download MP3 from YouTube URL',
-                'Direct audio streaming',
-                'High quality audio'
-            ],
-            limits: {
-                timeout: '30-45 seconds',
-                max_duration: 'Unknown (depends on API)'
-            },
-            examples: {
-                search: '/downloader/ytmp3/search?query=alan%20walker%20faded',
-                download: '/downloader/ytmp3/download?url=https://youtu.be/60ItHLz5WEA',
-                direct: '/downloader/ytmp3/direct?url=https://youtu.be/60ItHLz5WEA'
+        res.json({
+            status: 200,
+            creator: "api.vreden.my.id",
+            result: {
+                service: "YouTube to MP3 Downloader",
+                version: "1.0",
+                source: "api.vreden.my.id",
+                endpoints: {
+                    search: "/downloader/ytmp3/search?query=[keywords]",
+                    download: "/downloader/ytmp3/download?url=[youtube_url]",
+                    direct: "/downloader/ytmp3/direct?url=[youtube_url]",
+                    health: "/downloader/ytmp3/health",
+                    info: "/downloader/ytmp3/info"
+                },
+                examples: {
+                    search: "/downloader/ytmp3/search?query=alan%20walker%20faded",
+                    download: "/downloader/ytmp3/download?url=https://youtu.be/60ItHLz5WEA",
+                    direct: "/downloader/ytmp3/direct?url=https://youtu.be/60ItHLz5WEA"
+                }
             }
-        }));
+        });
+    });
+
+    // Endpoint: Get available qualities
+    app.get('/downloader/ytmp3/qualities', async (req, res) => {
+        try {
+            const { url } = req.query;
+
+            if (!url) {
+                return res.status(400).json({
+                    status: 400,
+                    creator: "api.vreden.my.id",
+                    error: "Parameter url diperlukan"
+                });
+            }
+
+            const apiUrl = `${vredenAPI.baseUrl}${vredenAPI.endpoints.ytmp3}${encodeURIComponent(url)}`;
+            const response = await axios.get(apiUrl, {
+                headers: vredenAPI.headers,
+                timeout: 30000
+            });
+
+            const data = response.data;
+
+            res.json({
+                status: 200,
+                creator: "api.vreden.my.id",
+                result: {
+                    videoId: data.id || null,
+                    title: data.title || null,
+                    availableQualities: data.download?.availableQuality || [92, 128, 256, 320],
+                    currentQuality: data.download?.quality || data.quality || "128kbps",
+                    downloadUrl: data.download?.url || data.url || data.dl_url || null
+                }
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                creator: "api.vreden.my.id",
+                error: "Failed to get qualities",
+                message: error.message
+            });
+        }
     });
 
     // Endpoint: Bulk search (multiple queries)
@@ -274,16 +291,18 @@ module.exports = function(app) {
             const { queries } = req.query;
 
             if (!queries) {
-                return res.status(400).json(handleResponse(false, 400, {
-                    error: 'Parameter queries diperlukan',
-                    example: '/downloader/ytmp3/bulk?queries=alan walker,ed sheeran,maroon 5'
-                }));
+                return res.status(400).json({
+                    status: 400,
+                    creator: "api.vreden.my.id",
+                    error: "Parameter queries diperlukan",
+                    example: "/downloader/ytmp3/bulk?queries=alan walker,ed sheeran,maroon 5"
+                });
             }
 
             const queryList = queries.split(',').map(q => q.trim()).filter(q => q);
             const results = [];
 
-            for (const query of queryList.slice(0, 5)) { // Max 5 queries
+            for (const query of queryList.slice(0, 3)) { // Max 3 queries
                 try {
                     const apiUrl = `${vredenAPI.baseUrl}${vredenAPI.endpoints.ytplaymp3}${encodeURIComponent(query)}`;
                     const response = await axios.get(apiUrl, {
@@ -291,78 +310,34 @@ module.exports = function(app) {
                         timeout: 15000
                     });
 
-                    results.push({
-                        query,
-                        success: true,
-                        data: response.data
-                    });
+                    results.push(handleVredenResponse(response.data, query));
                 } catch (error) {
                     results.push({
-                        query,
-                        success: false,
-                        error: error.message
+                        status: 500,
+                        creator: "api.vreden.my.id",
+                        error: error.message,
+                        query: query
                     });
                 }
             }
 
-            res.json(handleResponse(true, 200, {
-                total_queries: queryList.length,
-                processed: results.length,
-                results
-            }));
-
-        } catch (error) {
-            res.status(500).json(handleResponse(false, 500, {
-                error: 'Bulk search failed',
-                message: error.message
-            }));
-        }
-    });
-
-    // Endpoint: Download MP4 (jika ada)
-    app.get('/downloader/ytmp4/download', async (req, res) => {
-        try {
-            const { url } = req.query;
-
-            if (!url) {
-                return res.status(400).json(handleResponse(false, 400, {
-                    error: 'Parameter url diperlukan',
-                    example: '/downloader/ytmp4/download?url=https://youtu.be/VIDEO_ID'
-                }));
-            }
-
-            // Untuk MP4, kita bisa coba modifikasi endpoint
-            const apiUrl = `${vredenAPI.baseUrl}/ytmp4?url=${encodeURIComponent(url)}`;
-            
-            const response = await axios.get(apiUrl, {
-                headers: vredenAPI.headers,
-                timeout: 45000
+            res.json({
+                status: 200,
+                creator: "api.vreden.my.id",
+                result: {
+                    total_queries: queryList.length,
+                    processed: results.length,
+                    results: results
+                }
             });
 
-            const data = response.data;
-
-            res.json(handleResponse(true, 200, {
-                original_url: url,
-                video: {
-                    id: data.id || null,
-                    title: data.title || null,
-                    duration: data.duration || null,
-                    thumbnail: data.thumb || null
-                },
-                download: {
-                    url: data.url || data.dl_url || null,
-                    quality: data.quality || null,
-                    size: data.size || null,
-                    format: 'mp4'
-                }
-            }));
-
         } catch (error) {
-            console.error('YTMP4 Download Error:', error.message);
-            res.status(500).json(handleResponse(false, 500, {
-                error: 'MP4 download not supported or failed',
+            res.status(500).json({
+                status: 500,
+                creator: "api.vreden.my.id",
+                error: "Bulk search failed",
                 message: error.message
-            }));
+            });
         }
     });
 };
