@@ -89,108 +89,6 @@
           "status": "ready"
         }
       ]
-    },{
-  "name": "Anime",
-  "items": [
-    {
-      "name": "AnimeIn Home",
-      "desc": "Get anime home page content with various sections",
-      "path": "/animein/home?include=&day=&limit=",
-      "status": "ready",
-      "params": {
-        "include": "Section type: data, hot, new, popular, random (required)",
-        "day": "Day for schedule: MINGGU, SENIN, SELASA, RABU, KAMIS, JUMAT, SABTU (required for include=data)",
-        "limit": "Number of results (default: 10)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Explore",
-      "desc": "Explore anime by genres, years, and trailers",
-      "path": "/animein/explore?limit=",
-      "status": "ready",
-      "params": {
-        "limit": "Number of results (default: 10)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Search",
-      "desc": "Search anime by keyword with genre filtering",
-      "path": "/animein/search?keyword=&genre_in=&sort=&page=",
-      "status": "ready",
-      "params": {
-        "keyword": "Search query (required)",
-        "genre_in": "Genre filter (optional)",
-        "sort": "Sort by: views (default)",
-        "page": "Page number (default: 0)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Schedule",
-      "desc": "Get anime schedule for specific day",
-      "path": "/animein/schedule?day=",
-      "status": "ready",
-      "params": {
-        "day": "Day: MINGGU, SENIN, SELASA, RABU, KAMIS, JUMAT, SABTU (required)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Info",
-      "desc": "Get detailed information about anime including episodes",
-      "path": "/animein/info?id=&id_user=&key_client=&page=&search=",
-      "status": "ready",
-      "params": {
-        "id": "Anime ID (required)",
-        "id_user": "User ID (optional)",
-        "key_client": "Client key (optional)",
-        "page": "Page number for episodes (default: 0)",
-        "search": "Search within episodes (optional)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Streams",
-      "desc": "Get streaming links for anime episodes",
-      "path": "/animein/streams?id=",
-      "status": "ready",
-      "params": {
-        "id": "Episode ID (required)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn FYP",
-      "desc": "Get personalized anime recommendations (For You Page)",
-      "path": "/animein/fyp?favorite=&id_fyp=&id_user=&key_client=",
-      "status": "ready",
-      "params": {
-        "favorite": "Favorite filter (default: -1)",
-        "id_fyp": "FYP ID (optional)",
-        "id_user": "User ID (optional)",
-        "key_client": "Client key (optional)"
-      },
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Health",
-      "desc": "Check AnimeIn API service status",
-      "path": "/animein/health",
-      "status": "ready",
-      "params": {},
-      "response_type": "json"
-    },
-    {
-      "name": "AnimeIn Info",
-      "desc": "Get information about AnimeIn API endpoints",
-      "path": "/animein",
-      "status": "ready",
-      "params": {},
-      "response_type": "json"
-    }
-  ]
     },
     {
       "name": "Search Tools",
@@ -229,14 +127,6 @@
     {
       "name": "CreatorGames",
       "items": [
-        {
-      "name": "Filter List",
-      "desc": "Get list of all available AI filters",
-      "path": "/creator/filter",
-      "status": "ready",
-      "params": {},
-      "response_type": "json"
-    },
 {
       "name": "AI Photo Filters",
       "desc": "Apply various AI filters to photos - 16+ filters available",
