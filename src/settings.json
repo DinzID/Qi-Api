@@ -59,6 +59,14 @@
   "name": "Downloaders",
   "items": [
      {
+      "name": "YouTube MP3 Test Search",
+      "desc": "Debug endpoint to see raw API response structure for search",
+      "path": "/downloader/ytmp3/test",
+      "status": "debug",
+      "params": {},
+      "response_type": "json"
+    },
+     {
       "name": "YouTube MP3 Search",
       "desc": "Search YouTube videos and get MP3 download links",
       "path": "/downloader/ytmp3/search?query=",
