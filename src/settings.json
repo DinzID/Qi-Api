@@ -69,6 +69,8 @@
         "count": "Number of messages to send (1-50) (required)"
       },
       "response_type": "json"
+    }
+  ]
     },
     {
   "name": "Downloaders",
