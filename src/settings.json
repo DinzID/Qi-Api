@@ -56,6 +56,21 @@
       ]
     },
     {
+  "name": "Tools",
+  "items": [
+    {
+      "name": "NGL Spam (POST)",
+      "desc": "Spam NGL messages via POST request with JSON body",
+      "path": "POST /tools/ngl/spam",
+      "status": "ready",
+      "params": {
+        "link": "NGL profile link (https://ngl.link/username) (required)",
+        "message": "Message to send (required)",
+        "count": "Number of messages to send (1-50) (required)"
+      },
+      "response_type": "json"
+    },
+    {
   "name": "Downloaders",
   "items": [
      {
