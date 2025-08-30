@@ -58,6 +58,22 @@
     {
   "name": "Tools",
   "items": [
+      {
+      "name": "Catbox Upload (POST)",
+      "desc": "Upload file to Catbox.moe using base64 buffer",
+      "path": "POST /upload/catbox",
+      "status": "ready",
+      "params": {
+        "buffer": "Base64 encoded file data (required)",
+        "filename": "Filename with extension (optional)"
+      },
+      "response_type": "json"
+    }
+  ]
+    },
+    {
+  "name": "Tools",
+  "items": [
   {
       "name": "NGL Quick Spam (GET)",
       "desc": "Quick spam NGL messages via GET request",
