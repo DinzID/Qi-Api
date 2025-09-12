@@ -37,6 +37,18 @@
           },
           "response_type": "json"
         },
+            {
+          "name": "AI Image Editor from URL 2",
+          "desc": "Edit images from URL using AI with text prompts",
+          "path": "/ai/image/edit/url?url=&prompt=&filename=",
+          "status": "ready",
+          "params": {
+            "url": "Image URL (required)",
+            "prompt": "AI instructions (required)",
+            "filename": "Output filename (optional)"
+          },
+          "response_type": "image"
+        },
         {
           "name": "LuminAI",
           "desc": "Talk with luminai",
