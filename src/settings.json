@@ -24,30 +24,19 @@
         "prompt": "AI editing instructions (required)"
       },
       "response_type": "image"
-    },
+    },    
     {
           "name": "AI Image Editor from URL",
-          "desc": "Edit images from URL using AI with text prompts",
-          "path": "/ai/image/edit/url?url=&prompt=&filename=",
+          "desc": "Edit images from URL using AI with text prompts - JSON or direct image response",
+          "path": "/ai/image/edit/url?url=&prompt=&filename=&response=",
           "status": "ready",
           "params": {
             "url": "Image URL (required)",
             "prompt": "AI instructions (required)",
-            "filename": "Output filename (optional)"
+            "filename": "Output filename (optional)",
+            "response": "Response type: 'json' or 'image' (default: json)"
           },
-          "response_type": "json"
-        },
-            {
-          "name": "AI Image Editor from URL 2",
-          "desc": "Edit images from URL using AI with text prompts",
-          "path": "/ai/image/edit/url?url=&prompt=&filename=",
-          "status": "ready",
-          "params": {
-            "url": "Image URL (required)",
-            "prompt": "AI instructions (required)",
-            "filename": "Output filename (optional)"
-          },
-          "response_type": "image"
+          "response_type": "json/image"
         },
         {
           "name": "LuminAI",
