@@ -25,6 +25,17 @@
       },
       "response_type": "image"
     },
+                {
+      "name": "aibanana edit",
+      "desc": "ubah image mu menggunakan prompt",
+      "path": "/ai/image/edit/url?url=&prompt=",
+      "status": "ready",
+      "params": {
+        "url": "Image URL to edit (required)",
+        "prompt": "AI editing instructions (required)"
+      },
+      "response_type": "json"
+    },
         {
           "name": "LuminAI",
           "desc": "Talk with luminai",
