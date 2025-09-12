@@ -25,18 +25,17 @@
       },
       "response_type": "image"
     },    
-    {
+     {
           "name": "AI Image Editor from URL",
-          "desc": "Edit images from URL using AI with text prompts - JSON or direct image response",
-          "path": "/ai/image/edit/url?url=&prompt=&filename=&response=",
+          "desc": "Edit images from URL using AI with text prompts - Automatic CDN upload",
+          "path": "/ai/image/edit/url?url=&prompt=&filename=",
           "status": "ready",
           "params": {
             "url": "Image URL (required)",
             "prompt": "AI instructions (required)",
-            "filename": "Output filename (optional)",
-            "response": "Response type: 'json' or 'image' (default: json)"
+            "filename": "Output filename (optional)"
           },
-          "response_type": "json/image"
+          "response_type": "json"
         },
         {
           "name": "LuminAI",
