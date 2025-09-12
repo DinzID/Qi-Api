@@ -1,280 +1,351 @@
-const axios = require('axios');
+const axios = require("axios");
+const FormData = require("form-data");
+const crypto = require("crypto");
+const { fileTypeFromBuffer } = require('file-type');
 
 module.exports = function(app) {
-    // Daftar semua filter dengan method name saja
-    const filters = {
-        'tobabi': {
-            name: 'tobabi',
-            description: '🤱 Baby Filter - Membuat wajah terlihat seperti bayi lucu',
-            example: 'Wajah dewasa menjadi seperti bayi',
-            category: 'Fun',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tobabi?url='
-        },
-        'tobotak': {
-            name: 'tobotak',
-            description: '👨‍🦲 Botak Filter - Membuat rambut menjadi botak',
-            example: 'Rambut panjang menjadi botak',
-            category: 'Style',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tobotak?url='
-        },
-        'tobrewok': {
-            name: 'tobrewok',
-            description: '🧔 Brewok Filter - Menambahkan jenggot dan brewok',
-            example: 'Wajah bersih menjadi berjenggot',
-            category: 'Beard',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tobrewok?url='
-        },
-        'tohijab': {
-            name: 'tohijab',
-            description: '🧕 Hijab Filter - Menambahkan hijab pada foto',
-            example: 'Wanita tanpa hijab menjadi berhijab',
-            category: 'Religion',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tohijab?url='
-        },
-        'toghibli': {
-            name: 'toghibli',
-            description: '🎨 Ghibli Filter - Gaya anime Studio Ghibli yang aesthetic',
-            example: 'Foto biasa menjadi anime style',
-            category: 'Anime',
-            url: 'https://api-faa-skuarta.vercel.app/faa/toghibli?url='
-        },
-        'tolego': {
-            name: 'tolego',
-            description: '🧱 Lego Filter - Mengubah wajah menjadi karakter lego',
-            example: 'Wajah manusia menjadi lego',
-            category: 'Fun',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tolego?url='
-        },
-        'tohitam': {
-            name: 'tohitam',
-            description: '⚫ Hitam Filter - Filter efek hitam dan gelap',
-            example: 'Foto normal menjadi hitam putih gelap',
-            category: 'Color',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tohitam?url='
-        },
-        'tokacamatai': {
-            name: 'tokacamatai',
-            description: '👓 Kacamata Filter - Menambahkan kacamata pada wajah',
-            example: 'Wajah tanpa kacamata menjadi berkacamata',
-            category: 'Accessory',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tokacamatai?url='
-        },
-        'toputih': {
-            name: 'toputih',
-            description: '⚪ Putih Filter - Filter efek putih dan terang',
-            example: 'Foto normal menjadi putih terang',
-            category: 'Color',
-            url: 'https://api-faa-skuarta.vercel.app/faa/toputih?url='
-        },
-        'topacar': {
-            name: 'topacar',
-            description: '💑 Pacar Filter - Efek romantic couple',
-            example: 'Foto single menjadi berpasangan',
-            category: 'Relationship',
-            url: 'https://api-faa-skuarta.vercel.app/faa/topacar?url='
-        },
-        'topeci': {
-            name: 'topeci',
-            description: '👳 Peci Filter - Menambahkan peci/songkok',
-            example: 'Kepala tanpa peci menjadi berpeci',
-            category: 'Religion',
-            url: 'https://api-faa-skuarta.vercel.app/faa/topeci?url='
-        },
-        'tosdmtinggi': {
-            name: 'tosdmtinggi',
-            description: '📈 SDM Tinggi Filter - Efek professional',
-            example: 'Foto biasa menjadi professional',
-            category: 'Professional',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tosdmtinggi?url='
-        },
-        'topunk': {
-            name: 'topunk',
-            description: '🤘 Punk Filter - Gaya punk rock',
-            example: 'Penampilan normal menjadi punk',
-            category: 'Style',
-            url: 'https://api-faa-skuarta.vercel.app/faa/topunk?url='
-        },
-        'toreal': {
-            name: 'toreal',
-            description: '🖼️ Real Filter - Efek realistik',
-            example: 'Foto menjadi lebih realistik',
-            category: 'Enhancement',
-            url: 'https://api-faa-skuarta.vercel.app/faa/toreal?url='
-        },
-        'totua': {
-            name: 'totua',
-            description: '👴 Tua Filter - Membuat wajah terlihat lebih tua',
-            example: 'Wajah muda menjadi tua',
-            category: 'Age',
-            url: 'https://api-faa-skuarta.vercel.app/faa/totua?url='
-        },
-        'tozombie': {
-            name: 'tozombie',
-            description: '🧟 Zombie Filter - Efek zombie horror',
-            example: 'Wajah normal menjadi zombie',
-            category: 'Horror',
-            url: 'https://api-faa-skuarta.vercel.app/faa/tozombie?url='
+    // Konfigurasi Nano Banana AI
+    const BASE_URL = "https://ai-apps.codergautam.dev";
+
+    function acakName(len = 10) {
+        const chars = "abcdefghijklmnopqrstuvwxyz";
+        return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    }
+
+    async function autoregist() {
+        const uid = crypto.randomBytes(12).toString("hex");
+        const email = `gienetic${Date.now()}@nyahoo.com`;
+
+        const payload = {
+            uid,
+            email,
+            displayName: acakName(),
+            photoURL: "https://i.pravatar.cc/150",
+            appId: "photogpt"
+        };
+
+        const res = await axios.post(`${BASE_URL}/photogpt/create-user`, payload, {
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json",
+                "user-agent": "okhttp/4.9.2"
+            }
+        });
+
+        if (res.data.success) return uid;
+        throw new Error("Register gagal: " + JSON.stringify(res.data));
+    }
+
+    async function img2img(imageBuffer, prompt) {
+        const uid = await autoregist();
+
+        const form = new FormData();
+        form.append("image", imageBuffer, { filename: "input.jpg", contentType: "image/jpeg" });
+        form.append("prompt", prompt);
+        form.append("userId", uid);
+
+        const uploadRes = await axios.post(`${BASE_URL}/photogpt/generate-image`, form, {
+            headers: {
+                ...form.getHeaders(),
+                "accept": "application/json",
+                "user-agent": "okhttp/4.9.2",
+                "accept-encoding": "gzip"
+            }
+        });
+
+        if (!uploadRes.data.success) throw new Error(JSON.stringify(uploadRes.data));
+
+        const { pollingUrl } = uploadRes.data;
+        let status = "pending";
+        let resultUrl = null;
+
+        // Polling dengan timeout 60 detik
+        const startTime = Date.now();
+        const timeout = 60000;
+
+        while (status !== "Ready" && (Date.now() - startTime) < timeout) {
+            const pollRes = await axios.get(pollingUrl, {
+                headers: { "accept": "application/json", "user-agent": "okhttp/4.9.2" }
+            });
+            status = pollRes.data.status;
+            if (status === "Ready") {
+                resultUrl = pollRes.data.result.url;
+                break;
+            }
+            await new Promise(r => setTimeout(r, 3000));
         }
-    };
 
-    // Main endpoint - hanya pakai method
-    app.get('/creator/filter', async (req, res) => {
+        if (!resultUrl) throw new Error("Timeout: Gagal mendapatkan hasil gambar setelah 60 detik");
+
+        const resultImg = await axios.get(resultUrl, { responseType: "arraybuffer" });
+        return Buffer.from(resultImg.data);
+    }
+
+    // Endpoint: AI Image Editing
+    app.post('/ai/image/edit', async (req, res) => {
         try {
-            const { url, method } = req.query;
+            const { buffer, prompt, filename } = req.body;
 
-            // Validasi input
-            if (!url) {
+            // Validasi parameter
+            if (!buffer) {
                 return res.status(400).json({
-                    status: false,
-                    error: 'Parameter url diperlukan',
-                    example: '/creator/filter?url=https://example.com/photo.jpg&method=toghibli'
+                    status: 400,
+                    error: 'Parameter buffer diperlukan',
+                    example: {
+                        "buffer": "base64_string",
+                        "prompt": "make it anime style",
+                        "filename": "image.jpg"
+                    }
                 });
             }
 
-            if (!method) {
+            if (!prompt) {
                 return res.status(400).json({
-                    status: false,
-                    error: 'Parameter method diperlukan',
-                    example: '/creator/filter?url=https://example.com/photo.jpg&method=toghibli',
-                    available_methods: Object.keys(filters)
+                    status: 400,
+                    error: 'Parameter prompt diperlukan',
+                    example: "make it cyberpunk style, add sunglasses, background beach"
                 });
             }
 
-            const filter = filters[method];
-            if (!filter) {
-                return res.status(404).json({
-                    status: false,
-                    error: 'Method filter tidak ditemukan',
-                    available_methods: Object.keys(filters)
+            console.log(`🎨 AI Image Editing: "${prompt.substring(0, 50)}..."`);
+
+            // Convert base64 to buffer
+            let imageBuffer;
+            try {
+                if (buffer.startsWith('data:')) {
+                    const base64Data = buffer.split(',')[1];
+                    imageBuffer = Buffer.from(base64Data, 'base64');
+                } else {
+                    imageBuffer = Buffer.from(buffer, 'base64');
+                }
+            } catch (error) {
+                return res.status(400).json({
+                    status: 400,
+                    error: 'Format buffer tidak valid'
                 });
             }
 
-            console.log(`🎨 Applying ${filter.name} filter`);
+            // Process image dengan AI
+            const resultBuffer = await img2img(imageBuffer, prompt);
+            const fileType = await fileTypeFromBuffer(resultBuffer);
+            const finalFilename = filename || `ai_edited_${Date.now()}.${fileType.ext}`;
 
-            const apiUrl = `${filter.url}${encodeURIComponent(url)}`;
-            const response = await axios({
-                method: 'GET',
-                url: apiUrl,
-                responseType: 'arraybuffer',
-                timeout: 25000,
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Accept': 'image/*'
+            // Convert result ke base64 untuk response
+            const base64Result = resultBuffer.toString('base64');
+
+            res.json({
+                status: 200,
+                creator: "DinzID & gienetic",
+                result: {
+                    success: true,
+                    prompt: prompt,
+                    filename: finalFilename,
+                    mimeType: fileType.mime,
+                    extension: fileType.ext,
+                    size: resultBuffer.length,
+                    image: `data:${fileType.mime};base64,${base64Result}`,
+                    timestamp: new Date().toISOString()
                 }
             });
 
-            const contentType = response.headers['content-type'] || 'image/jpeg';
-            
-            res.setHeader('Content-Type', contentType);
-            res.setHeader('X-Filter-Name', filter.name);
-            res.setHeader('X-Filter-Category', filter.category);
-            res.setHeader('Cache-Control', 'public, max-age=1800');
-            
-            res.send(response.data);
-
         } catch (error) {
-            console.error('❌ Filter Error:', error.message);
+            console.error('❌ AI Image Error:', error.message);
             
             res.status(500).json({
-                status: false,
-                error: 'Gagal memproses filter',
-                message: error.message,
-                solution: 'Coba dengan URL gambar yang berbeda'
+                status: 500,
+                creator: "DinzID & gienetic",
+                error: error.message,
+                note: "AI processing mungkin timeout, coba lagi dengan prompt yang berbeda"
             });
         }
     });
 
-    // Endpoint untuk list semua method
-    app.get('/creator/filter/list', (req, res) => {
-        const filterList = Object.values(filters).map(filter => ({
-            method: filter.name,
-            description: filter.description,
-            category: filter.category,
-            example: filter.example,
-            usage: `/creator/filter?url=[image_url]&method=${filter.name}`
-        }));
-
-        res.json({
-            status: true,
-            total_filters: filterList.length,
-            usage: '/creator/filter?url=[image_url]&method=[method_name]',
-            methods: filterList
-        });
-    });
-
-    // Endpoint untuk info method spesifik
-    app.get('/creator/filter/info', (req, res) => {
-        const { method } = req.query;
-        
-        if (!method) {
-            return res.status(400).json({
-                status: false,
-                error: 'Parameter method diperlukan',
-                example: '/creator/filter/info?method=toghibli'
-            });
-        }
-
-        const filter = filters[method];
-        if (!filter) {
-            return res.status(404).json({
-                status: false,
-                error: 'Method filter tidak ditemukan',
-                available_methods: Object.keys(filters)
-            });
-        }
-
-        res.json({
-            status: true,
-            method: filter.name,
-            description: filter.description,
-            category: filter.category,
-            example: filter.example,
-            api_url: filter.url + '[image_url]',
-            usage: `/creator/filter?url=[image_url]&method=${filter.name}`
-        });
-    });
-
-    // Health check
-    app.get('/creator/filter/health', (req, res) => {
-        res.json({
-            status: true,
-            message: 'Filter API is running',
-            total_methods: Object.keys(filters).length,
-            timestamp: new Date().toISOString()
-        });
-    });
-
-    // Endpoint untuk test cepat
-    app.get('/creator/filter/test', async (req, res) => {
+    // Endpoint: AI Edit dari URL
+    app.post('/ai/image/edit/url', async (req, res) => {
         try {
-            const { method } = req.query;
-            const testUrl = 'https://via.placeholder.com/150';
-            
-            const filter = method ? filters[method] : filters['toghibli'];
-            if (!filter) {
-                return res.status(404).json({ 
-                    error: 'Method not found',
-                    available: Object.keys(filters)
+            const { url, prompt, filename } = req.body;
+
+            if (!url) {
+                return res.status(400).json({
+                    status: 400,
+                    error: 'Parameter url diperlukan'
                 });
             }
 
-            const apiUrl = `${filter.url}${encodeURIComponent(testUrl)}`;
-            const response = await axios.get(apiUrl, {
-                timeout: 15000,
-                validateStatus: () => true
+            if (!prompt) {
+                return res.status(400).json({
+                    status: 400,
+                    error: 'Parameter prompt diperlukan'
+                });
+            }
+
+            console.log(`🌐 Downloading image from: ${url}`);
+
+            // Download image dari URL
+            const response = await axios.get(url, {
+                responseType: 'arraybuffer',
+                timeout: 30000,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
             });
 
+            const imageBuffer = Buffer.from(response.data);
+            const fileType = await fileTypeFromBuffer(imageBuffer);
+            
+            if (!fileType || !fileType.mime.startsWith('image/')) {
+                throw new Error('File bukan gambar yang valid');
+            }
+
+            console.log(`🎨 AI Editing: "${prompt.substring(0, 50)}..."`);
+
+            // Process dengan AI
+            const resultBuffer = await img2img(imageBuffer, prompt);
+            const resultFileType = await fileTypeFromBuffer(resultBuffer);
+            const finalFilename = filename || `ai_edited_${Date.now()}.${resultFileType.ext}`;
+
+            const base64Result = resultBuffer.toString('base64');
+
             res.json({
-                status: true,
-                method: filter.name,
-                response_status: response.status,
-                content_type: response.headers['content-type'],
-                content_length: response.data?.length
+                status: 200,
+                creator: "DinzID & gienetic",
+                result: {
+                    success: true,
+                    originalUrl: url,
+                    prompt: prompt,
+                    filename: finalFilename,
+                    mimeType: resultFileType.mime,
+                    extension: resultFileType.ext,
+                    size: resultBuffer.length,
+                    image: `data:${resultFileType.mime};base64,${base64Result}`,
+                    timestamp: new Date().toISOString()
+                }
+            });
+
+        } catch (error) {
+            console.error('❌ AI URL Edit Error:', error.message);
+            
+            res.status(500).json({
+                status: 500,
+                creator: "DinzID & gienetic",
+                error: error.message
+            });
+        }
+    });
+
+    // Endpoint: Test AI dengan sample image
+    app.get('/ai/image/test', async (req, res) => {
+        try {
+            const { prompt = "make it anime style" } = req.query;
+
+            // Sample image base64 (1x1 pixel transparent)
+            const sampleImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+            
+            const imageBuffer = Buffer.from(sampleImage, 'base64');
+            
+            console.log(`🧪 Test AI dengan prompt: "${prompt}"`);
+
+            const resultBuffer = await img2img(imageBuffer, prompt);
+            const fileType = await fileTypeFromBuffer(resultBuffer);
+            const base64Result = resultBuffer.toString('base64');
+
+            res.json({
+                status: 200,
+                creator: "DinzID & gienetic",
+                result: {
+                    success: true,
+                    prompt: prompt,
+                    test: true,
+                    filename: `test_${Date.now()}.${fileType.ext}`,
+                    mimeType: fileType.mime,
+                    size: resultBuffer.length,
+                    image: `data:${fileType.mime};base64,${base64Result}`,
+                    message: "Test AI berhasil!",
+                    timestamp: new Date().toISOString()
+                }
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                creator: "DinzID & gienetic",
+                error: error.message,
+                note: "AI service mungkin down atau timeout"
+            });
+        }
+    });
+
+    // Endpoint: Info AI Image Editing
+    app.get('/ai/image/info', (req, res) => {
+        res.json({
+            status: 200,
+            creator: "DinzID & gienetic",
+            service: "Nano Banana AI Image Editor",
+            source: "https://play.google.com/store/apps/details?id=com.codergautamyt.photogpt",
+            features: [
+                "AI-powered image editing",
+                "Style transfer",
+                "Image enhancement",
+                "Text-to-image editing",
+                "Real-time processing"
+            ],
+            endpoints: {
+                edit: "POST /ai/image/edit",
+                edit_from_url: "POST /ai/image/edit/url",
+                test: "GET /ai/image/test",
+                info: "GET /ai/image/info"
+            },
+            parameters: {
+                buffer: "Base64 image string (required)",
+                url: "Image URL (optional alternative to buffer)",
+                prompt: "AI instructions (required)",
+                filename: "Output filename (optional)"
+            },
+            examples: {
+                edit: {
+                    "buffer": "base64_string",
+                    "prompt": "make it cyberpunk style with neon lights",
+                    "filename": "cyberpunk.jpg"
+                },
+                edit_url: {
+                    "url": "https://example.com/photo.jpg",
+                    "prompt": "convert to anime style",
+                    "filename": "anime_version.png"
+                },
+                test: "/ai/image/test?prompt=make it vintage style"
+            },
+            limits: {
+                timeout: "60 seconds",
+                max_size: "10MB",
+                formats: "JPG, PNG, WebP"
+            }
+        });
+    });
+
+    // Endpoint: Health check
+    app.get('/ai/image/health', async (req, res) => {
+        try {
+            const sampleImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+            const imageBuffer = Buffer.from(sampleImage, 'base64');
+
+            // Test registrasi
+            const uid = await autoregist();
+            
+            res.json({
+                status: 200,
+                creator: "DinzID & gienetic",
+                health: "healthy",
+                service: "Nano Banana AI",
+                registration: "success",
+                uid: uid,
+                timestamp: new Date().toISOString()
             });
 
         } catch (error) {
             res.json({
-                status: false,
+                status: 500,
+                creator: "DinzID & gienetic",
+                health: "unhealthy",
                 error: error.message
             });
         }
