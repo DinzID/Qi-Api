@@ -186,6 +186,70 @@
       ]
     },
     {
+  "name": "Filters",
+  "items": [
+    {
+      "name": "Apply Filter (Image Response)",
+      "desc": "Apply AI filter to image and get image response",
+      "path": "/filter/apply?filter=&url=",
+      "status": "ready",
+      "params": {
+        "filter": "Filter name (required)",
+        "url": "Image URL (required)"
+      },
+      "response_type": "image"
+    },
+    {
+      "name": "Apply Filter (JSON Response)",
+      "desc": "Apply AI filter to image and get JSON response with base64 image",
+      "path": "/filter/apply/json?filter=&url=",
+      "status": "ready",
+      "params": {
+        "filter": "Filter name (required)",
+        "url": "Image URL (required)"
+      },
+      "response_type": "json"
+    },
+    {
+      "name": "Filter List",
+      "desc": "Get list of all available AI filters",
+      "path": "/filter/list",
+      "status": "ready",
+      "params": {},
+      "response_type": "json"
+    },
+    {
+      "name": "Filter Info",
+      "desc": "Get detailed information about specific filter",
+      "path": "/filter/info?filter=",
+      "status": "ready",
+      "params": {
+        "filter": "Filter name (required)"
+      },
+      "response_type": "json"
+    },
+    {
+      "name": "Bulk Apply Filters",
+      "desc": "Apply multiple filters to an image at once",
+      "path": "/filter/bulk?url=&filters=",
+      "status": "ready",
+      "params": {
+        "url": "Image URL (required)",
+        "filters": "Comma-separated filter names (optional)"
+      },
+      "response_type": "json"
+    },
+    {
+      "name": "Filter Health Check",
+      "desc": "Check filter service health status",
+      "path": "/filter/health",
+      "status": "ready",
+      "params": {},
+      "response_type": "json"
+    }
+  ]
+},
+    {
       "name": "CreatorGames",
       "items": [
 {
