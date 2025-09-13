@@ -27,8 +27,8 @@
     },    
      {
           "name": "AI Image Editor from URL",
-          "desc": "Edit images from URL using AI with text prompts - Automatic CDN upload",
-          "path": "/ai/image/edit/url?url=&prompt=&filename=",
+          "desc": "Edit images from URL using AI with text prompts - Auto CDN upload & filename",
+          "path": "/ai/image/edit/url?url=&prompt=",
           "status": "ready",
           "params": {
             "url": "Image URL (required)",
