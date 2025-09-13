@@ -2,7 +2,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
 const path = require('path');
-const { fileTypeFromBuffer } = require('file-type');
+const fileType = require('file-type'); // PERUBAHAN DI SINI
 
 module.exports = function(app) {
     let apiKey = null;
@@ -65,7 +65,7 @@ module.exports = function(app) {
         }
     }
 
-    async function createGhibliImage(imageBuffer, prompt) {
+    async function createArtImage(imageBuffer, prompt) {
         try {
             const apiKey = await scrapeApiKey();
             const apiUrl = 'https://api.openai.com/v1/images/edits';
@@ -101,6 +101,10 @@ module.exports = function(app) {
             }
         } catch (error) {
             console.error('❌ OpenAI API Error:', error.message);
+            if (error.response) {
+                console.error('Status:', error.response.status);
+                console.error('Data:', error.response.data);
+            }
             throw new Error('OpenAI processing failed: ' + error.message);
         }
     }
@@ -138,9 +142,11 @@ module.exports = function(app) {
             });
 
             const imageBuffer = Buffer.from(response.data);
-            const fileType = await fileTypeFromBuffer(imageBuffer);
+            
+            // PERBAIKAN: Gunakan fileType.fromBuffer() bukan fileTypeFromBuffer()
+            const fileTypeInfo = await fileType.fromBuffer(imageBuffer);
 
-            if (!fileType || !fileType.mime.startsWith('image/')) {
+            if (!fileTypeInfo || !fileTypeInfo.mime.startsWith('image/')) {
                 return res.status(400).json({
                     status: 400,
                     error: 'File bukan gambar yang valid'
@@ -150,8 +156,10 @@ module.exports = function(app) {
             console.log(`🎨 Processing with prompt: "${prompt}"`);
 
             // Process dengan OpenAI
-            const resultBuffer = await createGhibliImage(imageBuffer, prompt);
-            const resultFileType = await fileTypeFromBuffer(resultBuffer);
+            const resultBuffer = await createArtImage(imageBuffer, prompt);
+            
+            // PERBAIKAN: Gunakan fileType.fromBuffer() yang benar
+            const resultFileType = await fileType.fromBuffer(resultBuffer);
             
             // AUTO UPLOAD KE CDN - NO BASE64 IN RESPONSE
             const finalFilename = `art_${Date.now()}.${resultFileType.ext}`;
@@ -224,8 +232,10 @@ module.exports = function(app) {
             console.log(`🎨 Processing with prompt: "${prompt}"`);
 
             // Process dengan OpenAI
-            const resultBuffer = await createGhibliImage(imageBuffer, prompt);
-            const resultFileType = await fileTypeFromBuffer(resultBuffer);
+            const resultBuffer = await createArtImage(imageBuffer, prompt);
+            
+            // PERBAIKAN: Gunakan fileType.fromBuffer() yang benar
+            const resultFileType = await fileType.fromBuffer(resultBuffer);
 
             // AUTO UPLOAD KE CDN
             const finalFilename = `art_${Date.now()}.${resultFileType.ext}`;
@@ -280,13 +290,7 @@ module.exports = function(app) {
                 cyberpunk: "/ai/art/convert?url=...&prompt=cyberpunk+neon+style",
                 anime: "/ai/art/convert?url=...&prompt=anime+style+with+bright+colors",
                 disney: "/ai/art/convert?url=...&prompt=disney+cartoon+style"
-            },
-            features: [
-                "Any art style support",
-                "Auto CDN upload", 
-                "No base64 in response",
-                "Direct image URLs"
-            ]
+            }
         });
     });
 };
