@@ -25,6 +25,31 @@
       },
       "response_type": "image"
     },    
+        {
+         "name": "AI Art Style Converter",
+          "desc": "Convert images to any art style with auto CDN upload - No base64",
+          "path": "/ai/art/convert?url=&prompt=",
+          "status": "ready",
+          "params": {
+            "url": "Image URL (required)",
+            "prompt": "Art style description (required)"
+          },
+          "response_type": "json",
+          "features": [
+            "Any art style support",
+            "Auto CDN upload to Catbox",
+            "No base64 in response",
+            "Direct image URLs",
+            "OpenAI powered"
+          ],
+          "examples": {
+            "ghibli": "/ai/art/convert?url=https://example.com/image.jpg&prompt=studio+ghibli+style",
+            "cyberpunk": "/ai/art/convert?url=https://example.com/image.jpg&prompt=cyberpunk+neon+style",
+            "anime": "/ai/art/convert?url=https://example.com/image.jpg&prompt=anime+style+with+large+eyes",
+            "disney": "/ai/art/convert?url=https://example.com/image.jpg&prompt=disney+cartoon+style",
+            "realistic": "/ai/art/convert?url=https://example.com/image.jpg&prompt=hyperrealistic+digital+art"
+          }
+        },
   {
           "name": "NanoBanana AI Editor",
           "desc": "Edit images using NanoBanana.ai AI with text prompts",
