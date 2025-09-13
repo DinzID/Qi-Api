@@ -25,17 +25,22 @@
       },
       "response_type": "image"
     },    
-   {
-          "name": "AI Image Editor from URL",
-          "desc": "Edit images from URL using AI with text prompts - Automatic CDN upload",
-          "path": "/ai/image/edit/url?url=&prompt=&filename=",
+  {
+          "name": "NanoBanana AI Editor",
+          "desc": "Edit images using NanoBanana.ai AI with text prompts",
+          "path": "/ai/image/edit/url?url=&prompt=",
           "status": "ready",
           "params": {
             "url": "Image URL (required)",
-            "prompt": "AI instructions (required)",
-            "filename": "Output filename (optional)"
+            "prompt": "AI instructions (required)"
           },
-          "response_type": "json"
+          "response_type": "json",
+          "features": [
+            "NanoBanana.ai engine",
+            "Auto CDN upload",
+            "Fake IP protection", 
+            "Real-time processing"
+          ]
         },
         {
           "name": "LuminAI",
