@@ -53,7 +53,7 @@
   {
           "name": "NanoBanana AI Editor",
           "desc": "Edit images using NanoBanana.ai AI with text prompts",
-          "path": "/ai/image/edit/url?url=&prompt=",
+          "path": "/ai/nanobanana/url?url=&prompt=",
           "status": "ready",
           "params": {
             "url": "Image URL (required)",
