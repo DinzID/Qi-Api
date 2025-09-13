@@ -2,26 +2,47 @@ const axios = require("axios");
 const FormData = require("form-data");
 const crypto = require("crypto");
 const fileTypeModule = require('file-type');
-const qs = require('querystring');
 
 module.exports = function(app) {
-    // Konfigurasi Nano Banana AI
-    const BASE_URL = "https://ai-apps.codergautam.dev";
+    // Konfigurasi berdasarkan scraper FongsiDev
+    const BASE_URL = "https://nanobanana.ai";
 
-    // Fungsi untuk upload ke Catbox CDN
+    // Generate fake IP headers seperti scraper
+    function generateFakeIpHeaders() {
+        const ipv4 = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+        return {
+            "X-Forwarded-For": ipv4,
+            "X-Originating-IP": ipv4,
+            "X-Remote-IP": ipv4,
+            "X-Remote-Addr": ipv4,
+            "X-Host": ipv4,
+            "X-Forwarded-Host": ipv4,
+            "X-Connecting-IP": ipv4,
+            "Client-IP": ipv4,
+            "X-Client-IP": ipv4,
+            "CF-Connecting-IP": ipv4,
+            "Fastly-Client-IP": ipv4,
+            "True-Client-IP": ipv4,
+            "X-Real-IP": ipv4,
+            "Forwarded": `for=${ipv4};proto=http;by=${ipv4}`,
+            "X-Cluster-Client-IP": ipv4,
+            "Via": `1.1 ${ipv4}`,
+            "Fgsi": `ap-${ipv4}`,
+            "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
+        };
+    }
+
+    // Fungsi untuk upload ke CDN
     async function uploadToCDN(imageBuffer, filename) {
         try {
             const formData = new FormData();
             formData.append('reqtype', 'fileupload');
-            formData.append('fileToUpload', imageBuffer, {
-                filename: filename,
-                contentType: 'image/jpeg'
-            });
+            formData.append('fileToUpload', imageBuffer, { filename });
 
             const response = await axios.post('https://catbox.moe/user/api.php', formData, {
                 headers: {
                     ...formData.getHeaders(),
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    ...generateFakeIpHeaders()
                 },
                 timeout: 30000
             });
@@ -36,361 +57,180 @@ module.exports = function(app) {
         }
     }
 
-    function acakName(len = 10) {
-        const chars = "abcdefghijklmnopqrstuvwxyz";
-        return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-    }
-
-    async function autoregist() {
-        const uid = crypto.randomBytes(12).toString("hex");
-        const email = `gienetic${Date.now()}@nyahoo.com`;
-
-        const payload = {
-            uid,
-            email,
-            displayName: acakName(),
-            photoURL: "https://i.pravatar.cc/150",
-            appId: "photogpt"
-        };
-
-        const res = await axios.post(`${BASE_URL}/photogpt/create-user`, payload, {
-            headers: {
-                "content-type": "application/json",
-                "accept": "application/json",
-                "user-agent": "okhttp/4.9.2"
-            }
-        });
-
-        if (res.data.success) return uid;
-        throw new Error("Register gagal: " + JSON.stringify(res.data));
-    }
-
-    async function img2img(imageBuffer, prompt) {
-        const uid = await autoregist();
-
-        const form = new FormData();
-        form.append("image", imageBuffer, { filename: "input.jpg", contentType: "image/jpeg" });
-        form.append("prompt", prompt);
-        form.append("userId", uid);
-
-        const uploadRes = await axios.post(`${BASE_URL}/photogpt/generate-image`, form, {
-            headers: {
-                ...form.getHeaders(),
-                "accept": "application/json",
-                "user-agent": "okhttp/4.9.2",
-                "accept-encoding": "gzip"
-            }
-        });
-
-        if (!uploadRes.data.success) throw new Error(JSON.stringify(uploadRes.data));
-
-        const { pollingUrl } = uploadRes.data;
-        let status = "pending";
-        let resultUrl = null;
-
-        // Polling dengan timeout 60 detik
-        const startTime = Date.now();
-        const timeout = 60000;
-
-        while (status !== "Ready" && (Date.now() - startTime) < timeout) {
-            const pollRes = await axios.get(pollingUrl, {
-                headers: { "accept": "application/json", "user-agent": "okhttp/4.9.2" }
-            });
-            status = pollRes.data.status;
-            if (status === "Ready") {
-                resultUrl = pollRes.data.result.url;
-                break;
-            }
-            await new Promise(r => setTimeout(r, 3000));
-        }
-
-        if (!resultUrl) throw new Error("Timeout: Gagal mendapatkan hasil gambar setelah 60 detik");
-
-        const resultImg = await axios.get(resultUrl, { responseType: "arraybuffer" });
-        return Buffer.from(resultImg.data);
-    }
-
-    // Endpoint: AI Image Editing - UPLOAD KE CDN
-    app.get('/ai/image/edit', async (req, res) => {
+    // Fungsi utama AI processing berdasarkan NanoBanana
+    async function nanoBananaAI(imageBuffer, prompt) {
         try {
-            const { buffer, prompt, filename } = req.query;
+            const headers = {
+                ...generateFakeIpHeaders(),
+                'accept': '*/*',
+                'accept-language': 'en-US,en;q=0.9,id;q=0.8',
+                'content-type': 'application/json',
+                'origin': 'https://nanobanana.ai',
+                'referer': 'https://nanobanana.ai/'
+            };
 
-            // Validasi parameter
-            if (!buffer) {
-                return res.status(400).json({
-                    status: 400,
-                    error: 'Parameter buffer diperlukan',
-                    example: '/ai/image/edit?buffer=base64_string&prompt=make+it+anime+style&filename=image.jpg'
-                });
-            }
-
-            if (!prompt) {
-                return res.status(400).json({
-                    status: 400,
-                    error: 'Parameter prompt diperlukan',
-                    example: '/ai/image/edit?buffer=base64_string&prompt=make+it+cyberpunk+style'
-                });
-            }
-
-            console.log(`🎨 AI Image Editing: "${prompt.substring(0, 50)}..."`);
-
-            // Decode URL encoded buffer
-            const decodedBuffer = decodeURIComponent(buffer);
+            // Step 1: Init session
+            console.log('🔹 Initializing session...');
+            const sessionRes = await axios.get(`${BASE_URL}/api/auth/session`, { headers });
             
-            // Convert base64 to buffer
-            let imageBuffer;
-            try {
-                if (decodedBuffer.startsWith('data:')) {
-                    const base64Data = decodedBuffer.split(',')[1];
-                    imageBuffer = Buffer.from(base64Data, 'base64');
-                } else {
-                    imageBuffer = Buffer.from(decodedBuffer, 'base64');
+            // Step 2: Get upload URL
+            console.log('🔹 Getting upload URL...');
+            const fileSize = imageBuffer.length;
+            const uploadRes = await axios.post(`${BASE_URL}/api/get-upload-url`, {
+                fileName: `ai_${Date.now()}.jpg`,
+                contentType: 'image/jpeg',
+                fileSize: fileSize
+            }, { headers });
+
+            const { uploadUrl, publicUrl } = uploadRes.data;
+
+            // Step 3: Upload image
+            console.log('🔹 Uploading image to nano banana...');
+            await axios.put(uploadUrl, imageBuffer, {
+                headers: { 'content-type': 'image/jpeg' }
+            });
+
+            // Step 4: Generate image
+            console.log('🔹 Processing AI...');
+            const generateRes = await axios.post(`${BASE_URL}/api/generate-image`, {
+                prompt: prompt,
+                styleId: "realistic",
+                mode: "image",
+                imageUrl: publicUrl,
+                imageUrls: [publicUrl]
+            }, { headers });
+
+            const { taskId } = generateRes.data;
+
+            // Step 5: Wait for result
+            console.log('🔹 Waiting for AI result...');
+            let result = null;
+            let attempts = 0;
+            const maxAttempts = 20; // 20 attempts * 3s = 60s timeout
+
+            while (attempts < maxAttempts) {
+                try {
+                    const statusRes = await axios.get(`${BASE_URL}/api/generate-image/status`, {
+                        params: { taskId },
+                        headers
+                    });
+
+                    if (statusRes.data.status === 'completed') {
+                        result = statusRes.data;
+                        break;
+                    } else if (statusRes.data.status === 'failed') {
+                        throw new Error('AI processing failed');
+                    }
+
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    attempts++;
+                } catch (error) {
+                    if (attempts >= maxAttempts) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    attempts++;
                 }
-            } catch (error) {
-                return res.status(400).json({
-                    status: 400,
-                    error: 'Format buffer tidak valid'
-                });
             }
 
-            // Process image dengan AI
-            const resultBuffer = await img2img(imageBuffer, prompt);
-            const fileType = await fileTypeModule.fromBuffer(resultBuffer);
-            const finalFilename = filename || `ai_edited_${Date.now()}.${fileType.ext}`;
+            if (!result) throw new Error('AI processing timeout');
 
-            // UPLOAD KE CDN
-            console.log('📤 Uploading result to CDN...');
-            const cdnUrl = await uploadToCDN(resultBuffer, finalFilename);
-            console.log('✅ Uploaded to CDN:', cdnUrl);
-
-            res.json({
-                status: 200,
-                creator: "DinzID & gienetic",
-                result: {
-                    success: true,
-                    prompt: prompt,
-                    filename: finalFilename,
-                    mimeType: fileType.mime,
-                    extension: fileType.ext,
-                    size: resultBuffer.length,
-                    cdnUrl: cdnUrl,
-                    directUrl: cdnUrl,
-                    timestamp: new Date().toISOString(),
-                    note: "Gambar telah diupload ke CDN"
-                }
+            // Step 6: Download result
+            console.log('🔹 Downloading result...');
+            const resultImage = await axios.get(result.result.url, {
+                responseType: 'arraybuffer',
+                headers: { 'User-Agent': headers['User-Agent'] }
             });
+
+            return Buffer.from(resultImage.data);
 
         } catch (error) {
-            console.error('❌ AI Image Error:', error.message);
-            
-            res.status(500).json({
-                status: 500,
-                creator: "DinzID & gienetic",
-                error: error.message,
-                note: "AI processing mungkin timeout, coba lagi dengan prompt yang berbeda"
-            });
+            console.error('NanoBanana AI Error:', error.message);
+            throw error;
         }
-    });
+    }
 
-    // Endpoint: AI Edit dari URL - UPLOAD KE CDN
+    // Endpoint utama
     app.get('/ai/image/edit/url', async (req, res) => {
         try {
-            const { url, prompt, filename } = req.query;
+            const { url, prompt } = req.query;
 
-            if (!url) {
+            if (!url || !prompt) {
                 return res.status(400).json({
                     status: 400,
-                    error: 'Parameter url diperlukan',
-                    example: '/ai/image/edit/url?url=https://example.com/photo.jpg&prompt=make+it+anime+style'
+                    error: 'Parameter url dan prompt diperlukan',
+                    example: '/ai/image/edit/url?url=https://example.com/image.jpg&prompt=edit+this+image'
                 });
             }
 
-            if (!prompt) {
-                return res.status(400).json({
-                    status: 400,
-                    error: 'Parameter prompt diperlukan',
-                    example: '/ai/image/edit/url?url=https://example.com/photo.jpg&prompt=convert+to+anime+style'
-                });
-            }
-
-            console.log(`🌐 Downloading image from: ${url}`);
+            console.log(`🌐 Downloading: ${url}`);
 
             // Download image dari URL
             const responseDL = await axios.get(url, {
                 responseType: 'arraybuffer',
-                timeout: 30000,
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                }
+                headers: generateFakeIpHeaders(),
+                timeout: 30000
             });
 
             const imageBuffer = Buffer.from(responseDL.data);
             const fileType = await fileTypeModule.fromBuffer(imageBuffer);
             
-            if (!fileType || !fileType.mime.startsWith('image/')) {
+            if (!fileType?.mime.startsWith('image/')) {
                 throw new Error('File bukan gambar yang valid');
             }
 
-            console.log(`🎨 AI Editing: "${prompt.substring(0, 50)}..."`);
+            console.log(`🎨 AI Processing: "${prompt.substring(0, 50)}..."`);
 
-            // Process dengan AI
-            const resultBuffer = await img2img(imageBuffer, prompt);
+            // Process dengan NanoBanana AI
+            const resultBuffer = await nanoBananaAI(imageBuffer, prompt);
             const resultFileType = await fileTypeModule.fromBuffer(resultBuffer);
-            const finalFilename = filename || `ai_edited_${Date.now()}.${resultFileType.ext}`;
+            
+            // Auto generate filename
+            const finalFilename = `ai_${Date.now()}.${resultFileType.ext}`;
 
-            // UPLOAD KE CDN
-            console.log('📤 Uploading result to CDN...');
+            // Upload to CDN
+            console.log('📤 Uploading to CDN...');
             const cdnUrl = await uploadToCDN(resultBuffer, finalFilename);
             console.log('✅ Uploaded to CDN:', cdnUrl);
 
             res.json({
                 status: 200,
-                creator: "DinzID & gienetic",
+                creator: "DinzID & FongsiDev",
                 result: {
                     success: true,
-                    originalUrl: url,
                     prompt: prompt,
                     filename: finalFilename,
                     mimeType: resultFileType.mime,
-                    extension: resultFileType.ext,
                     size: resultBuffer.length,
                     cdnUrl: cdnUrl,
                     directUrl: cdnUrl,
-                    timestamp: new Date().toISOString(),
-                    note: "Gambar telah diupload ke CDN"
-                }
-            });
-
-        } catch (error) {
-            console.error('❌ AI URL Edit Error:', error.message);
-            
-            res.status(500).json({
-                status: 500,
-                creator: "DinzID & gienetic",
-                error: error.message
-            });
-        }
-    });
-
-    // Endpoint: Test AI dengan sample image - UPLOAD KE CDN
-    app.get('/ai/image/test', async (req, res) => {
-        try {
-            const { prompt = "make it anime style" } = req.query;
-
-            // Sample image base64 (1x1 pixel transparent)
-            const sampleImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-            
-            const imageBuffer = Buffer.from(sampleImage, 'base64');
-            
-            console.log(`🧪 Test AI dengan prompt: "${prompt}"`);
-
-            const resultBuffer = await img2img(imageBuffer, prompt);
-            const fileType = await fileTypeModule.fromBuffer(resultBuffer);
-
-            // UPLOAD KE CDN
-            console.log('📤 Uploading test result to CDN...');
-            const cdnUrl = await uploadToCDN(resultBuffer, `test_${Date.now()}.${fileType.ext}`);
-            console.log('✅ Uploaded to CDN:', cdnUrl);
-
-            res.json({
-                status: 200,
-                creator: "DinzID & gienetic",
-                result: {
-                    success: true,
-                    prompt: prompt,
-                    test: true,
-                    filename: `test_${Date.now()}.${fileType.ext}`,
-                    mimeType: fileType.mime,
-                    size: resultBuffer.length,
-                    cdnUrl: cdnUrl,
-                    directUrl: cdnUrl,
-                    message: "Test AI berhasil!",
                     timestamp: new Date().toISOString()
                 }
             });
 
         } catch (error) {
+            console.error('❌ Error:', error.message);
+            
             res.status(500).json({
                 status: 500,
-                creator: "DinzID & gienetic",
+                creator: "DinzID & FongsiDev",
                 error: error.message,
-                note: "AI service mungkin down atau timeout"
+                solution: "Coba lagi dalam beberapa saat atau gunakan URL yang berbeda"
             });
         }
     });
 
-    // Endpoint: Info AI Image Editing
+    // Endpoint info
     app.get('/ai/image/info', (req, res) => {
         res.json({
             status: 200,
-            creator: "DinzID & gienetic",
-            service: "Nano Banana AI Image Editor + CDN",
-            source: "https://play.google.com/store/apps/details?id=com.codergautamyt.photogpt",
-            features: [
-                "AI-powered image editing",
-                "Style transfer",
-                "Image enhancement",
-                "Text-to-image editing",
-                "Automatic CDN upload",
-                "Direct image URLs"
-            ],
-            endpoints: {
-                edit: "GET /ai/image/edit?buffer=&prompt=&filename=",
-                edit_from_url: "GET /ai/image/edit/url?url=&prompt=&filename=",
-                test: "GET /ai/image/test?prompt=",
-                info: "GET /ai/image/info"
-            },
+            creator: "DinzID & FongsiDev",
+            service: "NanoBanana AI Image Editor",
+            source: "https://nanobanana.ai",
+            endpoint: "/ai/image/edit/url?url=&prompt=",
             parameters: {
-                buffer: "Base64 image string (URL encoded, required)",
-                url: "Image URL (required for URL method)",
-                prompt: "AI instructions (required)",
-                filename: "Output filename (optional)"
+                url: "Image URL (required)",
+                prompt: "AI instructions (required)"
             },
-            examples: {
-                edit: "/ai/image/edit?buffer=base64_string&prompt=make+it+cyberpunk+style&filename=cyberpunk.jpg",
-                edit_url: "/ai/image/edit/url?url=https://example.com/photo.jpg&prompt=convert+to+anime+style&filename=anime_version.png",
-                test: "/ai/image/test?prompt=make+it+vintage+style"
-            },
-            limits: {
-                timeout: "60 seconds",
-                max_size: "10MB",
-                formats: "JPG, PNG, WebP",
-                cdn: "catbox.moe"
-            }
+            example: "/ai/image/edit/url?url=https://example.com/image.jpg&prompt=make+it+anime+style"
         });
-    });
-
-    // Endpoint: Health check
-    app.get('/ai/image/health', async (req, res) => {
-        try {
-            const sampleImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-            const imageBuffer = Buffer.from(sampleImage, 'base64');
-
-            // Test registrasi
-            const uid = await autoregist();
-            
-            // Test CDN upload
-            const cdnUrl = await uploadToCDN(imageBuffer, 'healthcheck.png');
-            
-            res.json({
-                status: 200,
-                creator: "DinzID & gienetic",
-                health: "healthy",
-                service: "Nano Banana AI + CDN",
-                registration: "success",
-                cdn: "working",
-                cdnUrl: cdnUrl,
-                uid: uid,
-                timestamp: new Date().toISOString()
-            });
-
-        } catch (error) {
-            res.json({
-                status: 500,
-                creator: "DinzID & gienetic",
-                health: "unhealthy",
-                error: error.message
-            });
-        }
     });
 };
