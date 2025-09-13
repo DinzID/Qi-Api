@@ -25,14 +25,15 @@
       },
       "response_type": "image"
     },    
-     {
+   {
           "name": "AI Image Editor from URL",
-          "desc": "Edit images from URL using AI with text prompts - Auto CDN upload & filename",
-          "path": "/ai/image/edit/url?url=&prompt=",
+          "desc": "Edit images from URL using AI with text prompts - Automatic CDN upload",
+          "path": "/ai/image/edit/url?url=&prompt=&filename=",
           "status": "ready",
           "params": {
             "url": "Image URL (required)",
-            "prompt": "AI instructions (required)"
+            "prompt": "AI instructions (required)",
+            "filename": "Output filename (optional)"
           },
           "response_type": "json"
         },
