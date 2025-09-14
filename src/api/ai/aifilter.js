@@ -131,7 +131,7 @@ module.exports = function(app) {
 
             res.json({
                 status: 200,
-                creator: "DinzID & Faa API",
+                creator: "DinzID",
                 result: {
                     success: true,
                     filter: filterName,
