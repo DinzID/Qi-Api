@@ -62,40 +62,40 @@ module.exports = function(app) {
         }
     }
 
-    // Endpoint utama - SIMPLE
-    app.get('/ai/filter', async (req, res) => {
+    // Endpoint: Dinz AI Filter
+    app.get('/ai/dinz/url', async (req, res) => {
         try {
-            const { url, method } = req.query;
+            const { url, metode } = req.query;
 
             if (!url) {
                 return res.status(400).json({
                     status: false,
                     error: 'Parameter url diperlukan',
-                    example: '/ai/filter?url=https://example.com/image.jpg&method=toghibli'
+                    example: '/ai/dinz/url?url=https://example.com/image.jpg&metode=toghibli'
                 });
             }
 
-            if (!method) {
+            if (!metode) {
                 return res.status(400).json({
                     status: false,
-                    error: 'Parameter method diperlukan',
-                    example: '/ai/filter?url=https://example.com/image.jpg&method=toghibli',
-                    methods: Object.keys(methods)
-                });
-            }
-
-            if (!methods[method]) {
-                return res.status(400).json({
-                    status: false,
-                    error: 'Method tidak valid',
+                    error: 'Parameter metode diperlukan',
+                    example: '/ai/dinz/url?url=https://example.com/image.jpg&metode=toghibli',
                     available_methods: Object.keys(methods)
                 });
             }
 
-            console.log(`🎨 Applying ${method} to: ${url}`);
+            if (!methods[metode]) {
+                return res.status(400).json({
+                    status: false,
+                    error: 'Metode tidak valid',
+                    available_methods: Object.keys(methods)
+                });
+            }
 
-            // Langsung call Faa API
-            const apiUrl = `${BASE_URL}/${method}?url=${encodeURIComponent(url)}`;
+            console.log(`🎨 Applying ${metode} to: ${url}`);
+
+            // Call Faa API
+            const apiUrl = `${BASE_URL}/${metode}?url=${encodeURIComponent(url)}`;
             const response = await axios.get(apiUrl, {
                 responseType: 'arraybuffer',
                 timeout: 60000,
@@ -108,13 +108,13 @@ module.exports = function(app) {
             const resultFileType = await fileType.fromBuffer(resultBuffer);
 
             // Upload ke CDN
-            const filename = `${method}_${Date.now()}.${resultFileType.ext}`;
+            const filename = `${metode}_${Date.now()}.${resultFileType.ext}`;
             const cdnUrl = await uploadToCDN(resultBuffer, filename);
 
             res.json({
                 status: true,
-                method: method,
-                method_name: methods[method],
+                metode: metode,
+                metode_name: methods[metode],
                 original_url: url,
                 cdn_url: cdnUrl,
                 filename: filename,
@@ -132,36 +132,11 @@ module.exports = function(app) {
     });
 
     // Endpoint: List methods
-    app.get('/ai/filter/methods', (req, res) => {
+    app.get('/ai/dinz/methods', (req, res) => {
         res.json({
             status: true,
             total_methods: Object.keys(methods).length,
             methods: methods
         });
-    });
-
-    // Endpoint: Health check
-    app.get('/ai/filter/health', async (req, res) => {
-        try {
-            // Test dengan method pertama
-            const testMethod = Object.keys(methods)[0];
-            const testUrl = 'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg';
-            const apiUrl = `${BASE_URL}/${testMethod}?url=${encodeURIComponent(testUrl)}`;
-
-            await axios.get(apiUrl, { timeout: 10000 });
-            
-            res.json({
-                status: true,
-                message: 'Dinz API is working',
-                method_tested: testMethod,
-                timestamp: new Date().toISOString()
-            });
-        } catch (error) {
-            res.json({
-                status: false,
-                error: 'Health check failed',
-                message: error.message
-            });
-        }
     });
 };
