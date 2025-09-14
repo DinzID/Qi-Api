@@ -67,69 +67,25 @@
             "Real-time processing"
           ]
         },
-         {
-  "name": "photo AI Filters",
-  "description": "Simple API for Faa AI image filters",
-  "endpoints": [
-    {
-      "name": "photo Filter",
-      "path": "/ai/filter?url=&method=",
-      "method": "GET",
-      "params": {
-        "url": "Image URL (required)",
-        "method": "Filter method (required)"
-      },
-      "example": "/ai/filter?url=https://example.com/image.jpg&method=toghibli"
-    },
-    {
-      "name": "List Methods", 
-      "path": "/ai/filter/method",
-      "method": "GET",
-      "params": {},
-      "example": "/ai/filter/methods"
-    },
-    {
-      "name": "Health Check",
-      "path": "/ai/filter/health",
-      "method": "GET", 
-      "params": {},
-      "example": "/ai/filter/health"
-    }
-  ],
-  "available_methods": {
-    "toturky": "Turkey Filter",
-    "toghibli": "Ghibli Filter",
-    "tomekah": "Mekah Filter",
-    "toanime": "Anime Filter",
-    "tobotak": "Botak Filter",
-    "tobrewok": "Brewok Filter",
-    "tochibi": "Chibi Filter",
-    "todubai": "Dubai Filter",
-    "tofigura": "Figura Filter",
-    "tofigurav2": "Figura V2 Filter",
-    "tofigurav3": "Figura V3 Filter",
-    "tohijab": "Hijab Filter",
-    "tohitam": "Hitam Filter",
-    "tojepang": "Jepang Filter",
-    "tokacamata": "Kacamata Filter",
-    "tokamboja": "Kamboja Filter",
-    "tolego": "Lego Filter",
-    "tomaya": "Maya Filter",
-    "tomoai": "Moai Filter",
-    "tomonyet": "Monyet Filter",
-    "topacar": "Pacar Filter",
-    "topacarv2": "Pacar V2 Filter",
-    "topiramida": "Piramida Filter",
-    "topolaroid": "Polaroid Filter",
-    "toputih": "Putih Filter",
-    "toreal": "Real Filter",
-    "toroblox": "Roblox Filter",
-    "tosdmtinggi": "SDM Tinggi Filter",
-    "tosingapura": "Singapura Filter",
-    "totua": "Tua Filter",
-    "tozombie": "Zombie Filter"
-  }
-},
+             {
+          "name": "Dinz AI Editor",
+          "desc": "Edit images using Dinz AI filters",
+          "path": "/ai/dinz/url?url=&metode=",
+          "status": "ready",
+          "params": {
+            "url": "Image URL (required)",
+            "metode": "Filter method (required)"
+          },
+          "response_type": "json"
+        },
+        {
+          "name": "Dinz Methods List",
+          "desc": "Get list of available Dinz AI methods",
+          "path": "/ai/dinz/methods",
+          "status": "ready",
+          "params": {},
+          "response_type": "json"
+        },
         {
           "name": "LuminAI",
           "desc": "Talk with luminai",
