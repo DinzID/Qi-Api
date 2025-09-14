@@ -50,94 +50,184 @@ module.exports = function(app) {
     };
 
     // Daftar filter yang tersedia
-    const availableFilters = {
-        'topacar': {
-            name: 'Pacar Filter',
-            description: 'Efek romantic couple - foto single menjadi berpasangan',
-            category: 'Relationship'
-        },
-        'toghibli': {
-            name: 'Ghibli Filter', 
-            description: 'Gaya anime Studio Ghibli yang aesthetic',
-            category: 'Anime'
-        },
-        'tofigura': {
-            name: 'Figura Filter',
-            description: 'Efek figura atau bingkai foto',
-            category: 'Frame'
-        },
-        'tobabi': {
-            name: 'Baby Filter',
-            description: 'Membuat wajah terlihat seperti bayi lucu',
-            category: 'Fun'
-        },
-        'tobotak': {
-            name: 'Botak Filter',
-            description: 'Membuat rambut menjadi botak',
-            category: 'Style'
-        },
-        'tobrewok': {
-            name: 'Brewok Filter',
-            description: 'Menambahkan jenggot dan brewok',
-            category: 'Beard'
-        },
-        'tohijab': {
-            name: 'Hijab Filter',
-            description: 'Menambahkan hijab pada foto',
-            category: 'Religion'
-        },
-        'tolego': {
-            name: 'Lego Filter',
-            description: 'Mengubah wajah menjadi karakter lego',
-            category: 'Fun'
-        },
-        'tohitam': {
-            name: 'Hitam Filter',
-            description: 'Filter efek hitam dan gelap',
-            category: 'Color'
-        },
-        'tokacamatai': {
-            name: 'Kacamata Filter',
-            description: 'Menambahkan kacamata pada wajah',
-            category: 'Accessory'
-        },
-        'toputih': {
-            name: 'Putih Filter',
-            description: 'Filter efek putih dan terang',
-            category: 'Color'
-        },
-        'topeci': {
-            name: 'Peci Filter',
-            description: 'Menambahkan peci/songkok',
-            category: 'Religion'
-        },
-        'tosdmtinggi': {
-            name: 'SDM Tinggi Filter',
-            description: 'Efek professional',
-            category: 'Professional'
-        },
-        'topunk': {
-            name: 'Punk Filter',
-            description: 'Gaya punk rock',
-            category: 'Style'
-        },
-        'toreal': {
-            name: 'Real Filter',
-            description: 'Efek realistik',
-            category: 'Enhancement'
-        },
-        'totua': {
-            name: 'Tua Filter',
-            description: 'Membuat wajah terlihat lebih tua',
-            category: 'Age'
-        },
-        'tozombie': {
-            name: 'Zombie Filter',
-            description: 'Efek zombie horror',
-            category: 'Horror'
-        }
-    };
-
+const availableFilters = {
+    'topacar': {
+        name: 'Pacar Filter',
+        description: 'Efek romantic couple - foto single menjadi berpasangan',
+        category: 'Relationship'
+    },
+    'toghibli': {
+        name: 'Ghibli Filter', 
+        description: 'Gaya anime Studio Ghibli yang aesthetic',
+        category: 'Anime'
+    },
+    'tofigura': {
+        name: 'Figura Filter',
+        description: 'Efek figura atau bingkai foto',
+        category: 'Frame'
+    },
+    'tobabi': {
+        name: 'Baby Filter',
+        description: 'Membuat wajah terlihat seperti bayi lucu',
+        category: 'Fun'
+    },
+    'tobotak': {
+        name: 'Botak Filter',
+        description: 'Membuat rambut menjadi botak',
+        category: 'Style'
+    },
+    'tobrewok': {
+        name: 'Brewok Filter',
+        description: 'Menambahkan jenggot dan brewok',
+        category: 'Beard'
+    },
+    'tohijab': {
+        name: 'Hijab Filter',
+        description: 'Menambahkan hijab pada foto',
+        category: 'Religion'
+    },
+    'tolego': {
+        name: 'Lego Filter',
+        description: 'Mengubah wajah menjadi karakter lego',
+        category: 'Fun'
+    },
+    'tohitam': {
+        name: 'Hitam Filter',
+        description: 'Filter efek hitam dan gelap',
+        category: 'Color'
+    },
+    'tokacamatai': {
+        name: 'Kacamata Filter',
+        description: 'Menambahkan kacamata pada wajah',
+        category: 'Accessory'
+    },
+    'toputih': {
+        name: 'Putih Filter',
+        description: 'Filter efek putih dan terang',
+        category: 'Color'
+    },
+    'topeci': {
+        name: 'Peci Filter',
+        description: 'Menambahkan peci/songkok',
+        category: 'Religion'
+    },
+    'tosdmtinggi': {
+        name: 'SDM Tinggi Filter',
+        description: 'Efek professional',
+        category: 'Professional'
+    },
+    'topunk': {
+        name: 'Punk Filter',
+        description: 'Gaya punk rock',
+        category: 'Style'
+    },
+    'toreal': {
+        name: 'Real Filter',
+        description: 'Efek realistik',
+        category: 'Enhancement'
+    },
+    'totua': {
+        name: 'Tua Filter',
+        description: 'Membuat wajah terlihat lebih tua',
+        category: 'Age'
+    },
+    'tozombie': {
+        name: 'Zombie Filter',
+        description: 'Efek zombie horror',
+        category: 'Horror'
+    },
+    // Filter baru ditambahkan di bawah ini
+    'toanime': {
+        name: 'Anime Filter',
+        description: 'Mengubah wajah menjadi gaya anime',
+        category: 'Anime'
+    },
+    'tochibi': {
+        name: 'Chibi Filter',
+        description: 'Efek chibi lucu dan imut',
+        category: 'Fun'
+    },
+    'todubai': {
+        name: 'Dubai Filter',
+        description: 'Gaya kaya ala Dubai',
+        category: 'Style'
+    },
+    'tofigurav2': {
+        name: 'Figura V2 Filter',
+        description: 'Efek figura versi lebih keren',
+        category: 'Frame'
+    },
+    'tofigurav3': {
+        name: 'Figura V3 Filter',
+        description: 'Efek figura versi terbaru',
+        category: 'Frame'
+    },
+    'tojepang': {
+        name: 'Jepang Filter',
+        description: 'Gaya budaya Jepang',
+        category: 'Culture'
+    },
+    'tokacamata': {
+        name: 'Kacamata Filter',
+        description: 'Menambahkan kacamata pada wajah',
+        category: 'Accessory'
+    },
+    'tokamboja': {
+        name: 'Kamboja Filter',
+        description: 'Efek gaya Kamboja',
+        category: 'Culture'
+    },
+    'tomaya': {
+        name: 'Maya Filter',
+        description: 'Efek suku Maya atau ancient',
+        category: 'Culture'
+    },
+    'tomoa': {
+        name: 'Moai Filter',
+        description: 'Efek patung Moai dari Pulau Paskah',
+        category: 'Fun'
+    },
+    'tomonyet': {
+        name: 'Monyet Filter',
+        description: 'Efek wajah monyet lucu',
+        category: 'Fun'
+    },
+    'topacarv2': {
+        name: 'Pacar V2 Filter',
+        description: 'Efek romantic couple versi lebih romantis',
+        category: 'Relationship'
+    },
+    'topiramida': {
+        name: 'Piramida Filter',
+        description: 'Efek piramida Mesir',
+        category: 'Background'
+    },
+    'topolaroid': {
+        name: 'Polaroid Filter',
+        description: 'Efek foto polaroid vintage',
+        category: 'Vintage'
+    },
+    'toroblox': {
+        name: 'Roblox Filter',
+        description: 'Mengubah wajah menjadi karakter Roblox',
+        category: 'Game'
+    },
+    'tosingapura': {
+        name: 'Singapura Filter',
+        description: 'Efek gaya Singapura atau Marina Bay',
+        category: 'Travel'
+    },
+    'tomekah': {
+        name: 'Mekah Filter',
+        description: 'Efek background Masjidil Haram Mekah',
+        category: 'Religion'
+    },
+    'toturky': {
+        name: 'Turkey Filter',
+        description: 'Efek gaya Turki atau Istanbul',
+        category: 'Travel'
+    }
+};
     // Helper function
     function handleFilterResponse(data, filterName, imageUrl) {
         return {
