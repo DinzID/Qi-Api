@@ -67,6 +67,58 @@
             "Real-time processing"
           ]
         },
+         {
+          "name": "Photo AI Filters",
+          "desc": "28+ AI-powered image filters from photo API",
+          "path": "/ai/filter/:filterName?url=",
+          "status": "ready",
+          "params": {
+            "filterName": "Filter name (required in path)",
+            "url": "Image URL (required)"
+          },
+          "response_type": "json",
+          "filters": [
+            {"name": "toturky", "description": "Turkey Filter - Efek gaya Turki"},
+            {"name": "toghibli", "description": "Ghibli Filter - Gaya anime Studio Ghibli"},
+            {"name": "tomekah", "description": "Mekah Filter - Efek gaya Mekah"},
+            {"name": "toanime", "description": "Anime Filter - Gaya anime umum"},
+            {"name": "tobotak", "description": "Botak Filter - Membuat rambut botak"},
+            {"name": "tobrewok", "description": "Brewok Filter - Menambahkan jenggot"},
+            {"name": "tochibi", "description": "Chibi Filter - Gaya chibi imut"},
+            {"name": "todubai", "description": "Dubai Filter - Efek gaya Dubai"},
+            {"name": "tofigura", "description": "Figura Filter - Efek figura"},
+            {"name": "tofigurav2", "description": "Figura V2 Filter - Efek figura versi 2"},
+            {"name": "tofigurav3", "description": "Figura V3 Filter - Efek figura versi 3"},
+            {"name": "tohijab", "description": "Hijab Filter - Menambahkan hijab"},
+            {"name": "tohitam", "description": "Hitam Filter - Efek hitam"},
+            {"name": "tojepang", "description": "Jepang Filter - Gaya Jepang"},
+            {"name": "tokacamata", "description": "Kacamata Filter - Menambahkan kacamata"},
+            {"name": "tokamboja", "description": "Kamboja Filter - Efek gaya Kamboja"},
+            {"name": "tolego", "description": "Lego Filter - Gaya lego"},
+            {"name": "tomaya", "description": "Maya Filter - Efek suku Maya"},
+            {"name": "tomoai", "description": "Moai Filter - Efek patung Moai"},
+            {"name": "tomonyet", "description": "Monyet Filter - Efek monyet"},
+            {"name": "topacar", "description": "Pacar Filter - Efek pacar"},
+            {"name": "topacarv2", "description": "Pacar V2 Filter - Efek pacar versi 2"},
+            {"name": "topiramida", "description": "Piramida Filter - Efek piramida"},
+            {"name": "topolaroid", "description": "Polaroid Filter - Efek polaroid"},
+            {"name": "toputih", "description": "Putih Filter - Efek putih"},
+            {"name": "toreal", "description": "Real Filter - Efek realistik"},
+            {"name": "toroblox", "description": "Roblox Filter - Gaya Roblox"},
+            {"name": "tosdmtinggi", "description": "SDM Tinggi Filter - Efek professional"},
+            {"name": "tosingapura", "description": "Singapura Filter - Efek gaya Singapura"},
+            {"name": "totua", "description": "Tua Filter - Membuat wajah tua"},
+            {"name": "tozombie", "description": "Zombie Filter - Efek zombie"}
+          ]
+        },
+        {
+          "name": "List All Filters",
+          "desc": "Get list of all available Faa AI filters",
+          "path": "/ai/filter",
+          "status": "ready",
+          "params": {},
+          "response_type": "json"
+        },
         {
           "name": "LuminAI",
           "desc": "Talk with luminai",
